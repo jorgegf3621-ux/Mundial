@@ -333,7 +333,16 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
   <div class="title">MUNDIAL<br><span>2026</span></div>
   <div class="title-year">QUIZ</div>
   <div class="sub">Amalga Group &nbsp;·&nbsp; Team Wide Call</div>
-  <div class="flags-row">🇲🇽 🇧🇷 🇪🇸 🇦🇷 🇫🇷 🇩🇪 🇵🇹 🇬🇧</div>
+  <div class="flags-row">
+    <img src="https://flagcdn.com/w40/mx.png" style="height:28px;border-radius:3px">
+    <img src="https://flagcdn.com/w40/br.png" style="height:28px;border-radius:3px">
+    <img src="https://flagcdn.com/w40/es.png" style="height:28px;border-radius:3px">
+    <img src="https://flagcdn.com/w40/ar.png" style="height:28px;border-radius:3px">
+    <img src="https://flagcdn.com/w40/fr.png" style="height:28px;border-radius:3px">
+    <img src="https://flagcdn.com/w40/de.png" style="height:28px;border-radius:3px">
+    <img src="https://flagcdn.com/w40/pt.png" style="height:28px;border-radius:3px">
+    <img src="https://flagcdn.com/w40/gb.png" style="height:28px;border-radius:3px">
+  </div>
   <div class="card">
     <h2>¿Cómo entras?</h2>
     <!-- HOST -->
@@ -696,8 +705,13 @@ initFloaters();
 // DATA
 // ══════════════════════════════════════════
 const T={
-  Mexico:{f:'🇲🇽'},Brasil:{f:'🇧🇷'},España:{f:'🇪🇸'},Argentina:{f:'🇦🇷'},
-  Francia:{f:'🇫🇷'},Alemania:{f:'🇩🇪'},Portugal:{f:'🇵🇹'},Inglaterra:{f:'🇬🇧'}
+  Mexico:{f:'🇲🇽',cc:'mx'},Brasil:{f:'🇧🇷',cc:'br'},España:{f:'🇪🇸',cc:'es'},Argentina:{f:'🇦🇷',cc:'ar'},
+  Francia:{f:'🇫🇷',cc:'fr'},Alemania:{f:'🇩🇪',cc:'de'},Portugal:{f:'🇵🇹',cc:'pt'},Inglaterra:{f:'🇬🇧',cc:'gb'}
+};
+const flagImg=(team,size)=>{
+  const cc=T[team]?.cc;if(!cc)return '·';
+  const[w,h]=size==='lg'?['w80','42px']:size==='md'?['w40','26px']:['w20','14px'];
+  return`<img src="https://flagcdn.com/${w}/${cc}.png" style="height:${h};border-radius:3px;vertical-align:middle;display:inline-block">`;
 };
 
 // Questions with 4 options. correctIndex = index of correct answer (0-based)
@@ -925,7 +939,7 @@ function renderBkt(){
 function mc(m){
   return`<div class="mc ${S.activeMatch===m.id?'act':''} ${m.winner?'done':''}" onclick="selMatch('${m.id}')">
     ${m.teams.map((t,i)=>`<div class="mt ${m.winner===t?'win':''}">
-      <span class="mfl">${t?T[t]?.f:'·'}</span>
+      <span class="mfl">${t?flagImg(t,'md'):'·'}</span>
       <span class="mname">${t?t.toUpperCase():'?'}</span>
       <span class="msc">${m.score[i]}</span></div>`).join('')}
     <div class="mlb">${m.label}</div></div>`;
@@ -935,7 +949,7 @@ function renderMBtns(){
   document.getElementById('mbtns').innerHTML=S.bracket.map(m=>`
     <button class="mb ${S.activeMatch===m.id?'act':''} ${m.winner?'done':''}"
       ${!m.teams[0]||!m.teams[1]?'disabled':''} onclick="selMatch('${m.id}')">
-      ${m.teams[0]?(T[m.teams[0]]?.f+' '+m.teams[0]):'?'} <span style="opacity:.4">vs</span> ${m.teams[1]?(T[m.teams[1]]?.f+' '+m.teams[1]):'?'}
+      ${m.teams[0]?(flagImg(m.teams[0],'sm')+' '+m.teams[0]):'?'} <span style="opacity:.4">vs</span> ${m.teams[1]?(flagImg(m.teams[1],'sm')+' '+m.teams[1]):'?'}
       <span style="font-size:9px;opacity:.5;margin-left:4px">&middot; ${m.label}</span>
     </button>`).join('');
 }
@@ -961,11 +975,11 @@ function selMatch(id){
 
 function updHSB(m){
   const[tA,tB]=m.teams;
-  document.getElementById('fA').textContent=tA?T[tA]?.f:'?';
-  document.getElementById('cnA').textContent=tA?`${T[tA]?.f} ${tA.toUpperCase()}`:'?';
+  document.getElementById('fA').innerHTML=tA?flagImg(tA,'lg'):'?';
+  document.getElementById('cnA').innerHTML=tA?`${flagImg(tA,'sm')} ${tA.toUpperCase()}`:'?';
   document.getElementById('scA').textContent=m.score[0];
-  document.getElementById('fB').textContent=tB?T[tB]?.f:'?';
-  document.getElementById('cnB').textContent=tB?`${T[tB]?.f} ${tB.toUpperCase()}`:'?';
+  document.getElementById('fB').innerHTML=tB?flagImg(tB,'lg'):'?';
+  document.getElementById('cnB').innerHTML=tB?`${flagImg(tB,'sm')} ${tB.toUpperCase()}`:'?';
   document.getElementById('scB').textContent=m.score[1];
 }
 
@@ -1058,7 +1072,7 @@ function onBuzz(buzz){
   const entries=document.getElementById('bzentries');
   const div=document.createElement('div');
   div.className=`be ${isFirst?'first':''} ${isCorrect?'ans-ok':'ans-no'}`;
-  div.innerHTML=`<span class="bef">${T[buzz.team]?.f}</span><span class="ben">${buzz.team.toUpperCase()}</span><span class="bea">${LABS[buzz.answerIdx]} ${isCorrect?'✓ CORRECTO':'✗ INCORRECTO'}</span>`;
+  div.innerHTML=`<span class="bef">${flagImg(buzz.team,'md')}</span><span class="ben">${buzz.team.toUpperCase()}</span><span class="bea">${LABS[buzz.answerIdx]} ${isCorrect?'✓ CORRECTO':'✗ INCORRECTO'}</span>`;
   entries.appendChild(div);
 
   document.getElementById('bzbar').classList.add('has-buzz');
@@ -1197,8 +1211,8 @@ function cpLink(url,btn){navigator.clipboard.writeText(url).then(()=>{btn.textCo
 // PLAYER
 // ══════════════════════════════════════════
 function renderPlayer(){
-  document.getElementById('pfl').textContent=T[S.team]?.f||'⚽';
-  document.getElementById('pcn').textContent=`${T[S.team]?.f||''} ${S.team.toUpperCase()}`;
+  document.getElementById('pfl').innerHTML=flagImg(S.team,'lg');
+  document.getElementById('pcn').innerHTML=`${flagImg(S.team,'sm')} ${S.team.toUpperCase()}`;
 }
 
 function pQStart(d){
@@ -1283,15 +1297,15 @@ function updPGoals(){
 // OVERLAYS
 // ══════════════════════════════════════════
 function showGoal(team,answer){
-  document.getElementById('gtnm').textContent=`${T[team]?.f||''} ${team.toUpperCase()}`;
+  document.getElementById('gtnm').innerHTML=`${flagImg(team,'sm')} ${team.toUpperCase()}`;
   document.getElementById('gans').textContent=answer?`✓ ${answer}`:'';
   const ov=document.getElementById('gov');ov.classList.add('show');
   setTimeout(()=>ov.classList.remove('show'),2800);
 }
 
 function showWin(team){
-  document.getElementById('wfl').textContent=T[team]?.f||'';
-  document.getElementById('wnm').textContent=`${T[team]?.f||''} ${team.toUpperCase()}`;
+  document.getElementById('wfl').innerHTML=flagImg(team,'lg');
+  document.getElementById('wnm').innerHTML=`${flagImg(team,'sm')} ${team.toUpperCase()}`;
   document.getElementById('wov').classList.add('show');
   launchConfetti();sfxWinner();
 }
