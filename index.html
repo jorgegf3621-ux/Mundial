@@ -532,9 +532,16 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
 // ══════════════════════════════════════════
 const AC = new (window.AudioContext || window.webkitAudioContext)();
 let bgGainNode = null, bgPlaying = false, musicOn = false;
-const SONG_TRACK_URL = 'assets/bg-song.mp3';
+const PLAYLIST = [
+  'assets/Monterrey.mp3',
+  'assets/Fifa mp3.mp3',
+  'assets/fifa2.mp3',
+  'assets/latin-sport-house.mp3',
+  'assets/bg-song.mp3',
+];
 let bgAudio = null;
 let usingTrackAudio = false;
+let currentTrackIdx = 0;
 
 function unlockAudio(){if(AC.state==='suspended')AC.resume();}
 
@@ -550,10 +557,17 @@ function playTone(freq,dur,type='sine',vol=0.3,delay=0){
 
 function ensureTrackAudio(){
   if(bgAudio)return;
-  bgAudio=new Audio(SONG_TRACK_URL);
-  bgAudio.loop=true;
+  bgAudio=new Audio(PLAYLIST[currentTrackIdx]);
+  bgAudio.loop=false;
   bgAudio.preload='auto';
   bgAudio.volume=0.35;
+  bgAudio.addEventListener('ended',()=>{
+    if(!musicOn)return;
+    currentTrackIdx=(currentTrackIdx+1)%PLAYLIST.length;
+    bgAudio.src=PLAYLIST[currentTrackIdx];
+    bgAudio.load();
+    bgAudio.play().catch(()=>{});
+  });
 }
 
 // Vuvuzela-ish crowd hum + rhythmic beat fallback
