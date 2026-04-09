@@ -627,9 +627,14 @@ async function startBGMusic(){
   bgPlaying=true;
   ensureTrackAudio();
   try{
+    // Preload check
+    bgAudio.load();
+    await new Promise((res,rej)=>{bgAudio.oncanplaythrough=res;bgAudio.onerror=()=>rej(new Error('Failed to load MP3'));setTimeout(rej,8000,new Error('Load timeout'));});
     await bgAudio.play();
     usingTrackAudio=true;
-  }catch{
+    console.log('♪ Playing custom track:',SONG_TRACK_URL);
+  }catch(e){
+    console.warn('♪ Track failed, using synth fallback:',e.message);
     usingTrackAudio=false;
     startSynthBGMusic();
   }
