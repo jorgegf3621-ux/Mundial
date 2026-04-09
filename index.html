@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mundial 2026 Quiz — Amalga</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1a7a3c;--gl:#25a852;--gd:#0f4f26;
+  --gold:#f5c200;--gol:#c49a00;
+  --w:#f8f8f0;--k:#080808;
+  --red:#e63939;--gray:#777;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-height:100vh;overflow-x:hidden}
+
+/* ── ANIMATED BG ── */
+.bg-stadium{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(26,122,60,.35) 0%,transparent 60%),
+    radial-gradient(circle at 10% 90%,rgba(245,194,0,.12) 0%,transparent 40%),
+    radial-gradient(circle at 90% 85%,rgba(37,168,82,.1) 0%,transparent 40%),
+    linear-gradient(180deg,#060a06 0%,#080808 100%);
+}
+/* Grass lines */
+.bg-stadium::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(37,168,82,.04) 60px,rgba(37,168,82,.04) 62px);
+}
+
+/* ── FLOATING ELEMENTS ── */
+#floaters{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.floater{position:absolute;animation:floatUp linear infinite;opacity:0;font-size:24px;user-select:none}
+@keyframes floatUp{
+  0%{transform:translateY(110vh) rotate(0deg) scale(.8);opacity:0}
+  10%{opacity:.7}
+  90%{opacity:.5}
+  100%{transform:translateY(-15vh) rotate(720deg) scale(1.1);opacity:0}
+}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh;position:relative;z-index:2}
+.screen.active{display:flex;flex-direction:column}
+
+/* ════════════════ LANDING ════════════════ */
+#ls{align-items:center;justify-content:center;padding:30px 20px;text-align:center}
+
+.stadium-lights{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:700px;height:200px;pointer-events:none;
+  background:radial-gradient(ellipse at 20% 0%,rgba(245,194,0,.25),transparent 50%),
+             radial-gradient(ellipse at 80% 0%,rgba(37,168,82,.25),transparent 50%);
+  animation:lights 3s ease-in-out infinite alternate;
+}
+@keyframes lights{0%{opacity:.6}100%{opacity:1}}
+
+.trophy-wrap{position:relative;display:inline-block;margin-bottom:10px}
+.trophy{font-size:80px;filter:drop-shadow(0 0 30px rgba(245,194,0,.7));animation:trophyBob 2.5s ease-in-out infinite}
+@keyframes trophyBob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+
+.title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,10vw,110px);letter-spacing:6px;line-height:.85;color:var(--w);text-shadow:0 4px 30px rgba(0,0,0,.5)}
+.title span{color:var(--gold);text-shadow:0 0 40px rgba(245,194,0,.5)}
+.title-year{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,56px);
+  letter-spacing:12px;color:rgba(255,255,255,.25);margin-top:4px;
+}
+.sub{font-size:12px;letter-spacing:4px;color:var(--gray);text-transform:uppercase;margin:12px 0 28px}
+
+.flags-row{font-size:28px;letter-spacing:8px;margin-bottom:28px;animation:fadeIn .8s ease-out .3s both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:18px;padding:28px 32px;
+  width:100%;max-width:420px;
+  backdrop-filter:blur(12px);
+  animation:fadeIn .6s ease-out .5s both;
+}
+.card h2{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--gold);margin-bottom:18px}
+.fg{margin-bottom:14px;text-align:left}
+.fg label{font-size:10px;letter-spacing:2px;color:var(--gray);text-transform:uppercase;display:block;margin-bottom:5px}
+.fg input,.fg select{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:9px;color:var(--w);font-family:'Barlow',sans-serif;font-size:15px;padding:10px 14px;outline:none;transition:border-color .2s,box-shadow .2s}
+.fg input:focus,.fg select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,194,0,.15)}
+.fg select option{background:#1a1a1a}
+.divider{display:flex;align-items:center;gap:12px;color:var(--gray);font-size:11px;margin:14px 0;text-transform:uppercase;letter-spacing:2px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1)}
+
+/* ── MUSIC TOGGLE ── */
+.music-toggle{
+  position:fixed;top:16px;right:16px;z-index:100;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  border-radius:50%;width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:18px;transition:all .2s;
+  backdrop-filter:blur(8px);
+}
+.music-toggle:hover{background:rgba(255,255,255,.15);transform:scale(1.1)}
+.music-toggle.playing{border-color:var(--gold);box-shadow:0 0 12px rgba(245,194,0,.4);animation:musicPulse 1s ease-in-out infinite alternate}
+@keyframes musicPulse{from{box-shadow:0 0 8px rgba(245,194,0,.3)}to{box-shadow:0 0 20px rgba(245,194,0,.6)}}
+
+/* ── BUTTONS ── */
+.btn{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:12px 24px;border-radius:9px;border:none;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .15s}
+.btn:hover::after{background:rgba(255,255,255,.08)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gol));color:var(--k);box-shadow:0 4px 15px rgba(245,194,0,.3)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(245,194,0,.4)}
+.btn-green{background:linear-gradient(135deg,var(--gl),var(--green));color:var(--w);box-shadow:0 4px 15px rgba(37,168,82,.25)}
+.btn-green:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(37,168,82,.35)}
+.btn-red{background:linear-gradient(135deg,#e63939,#b02020);color:var(--w)}
+.btn-red:hover{transform:translateY(-2px);opacity:.9}
+.btn-ghost{background:transparent;color:var(--w);border:1px solid rgba(255,255,255,.2)}
+.btn-ghost:hover{border-color:var(--w);background:rgba(255,255,255,.05)}
+.btn:disabled{opacity:.3;cursor:default;transform:none!important;box-shadow:none!important}
+.w100{width:100%}
+
+/* ════════════════ HOST ════════════════ */
+#hs{padding:20px 16px;align-items:center;position:relative}
+.hh{text-align:center;margin-bottom:16px}
+.hh h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4.5vw,54px);color:var(--gold);letter-spacing:4px;text-shadow:0 0 30px rgba(245,194,0,.4)}
+.hh p{color:var(--gray);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+
+/* Bracket */
+.bracket-scroll{width:100%;max-width:1100px;overflow-x:auto;margin-bottom:18px;padding-bottom:6px}
+.bracket-scroll::-webkit-scrollbar{height:4px}
+.bracket-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.04)}
+.bracket-scroll::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
+.bracket{display:flex;align-items:center;gap:0;min-width:900px}
+.bround{display:flex;flex-direction:column;gap:14px;flex:1;min-width:170px}
+.bround.mid{justify-content:center}
+.barrow{width:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,.2);align-self:stretch}
+.mc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s;width:100%}
+.mc:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 20px rgba(245,194,0,.15)}
+.mc.act{border-color:var(--gl);box-shadow:0 0 20px rgba(37,168,82,.35)}
+.mc.done{opacity:.65}
+.mt{padding:9px 11px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;min-height:38px}
+.mt:first-child{border-bottom:1px solid rgba(255,255,255,.07)}
+.mt.win{background:rgba(37,168,82,.2);color:var(--gl)}
+.mfl{font-size:20px;flex-shrink:0;line-height:1}
+.mname{flex:1;font-size:11px;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msc{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--gold);min-width:16px;text-align:right}
+.mlb{font-size:8px;color:var(--gray);text-transform:uppercase;letter-spacing:2px;padding:3px 11px;background:rgba(0,0,0,.4);border-top:1px solid rgba(255,255,255,.05);text-align:center}
+
+/* Match btns */
+.ms-wrap{width:100%;max-width:860px;text-align:center;margin-bottom:14px}
+.ms-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;color:var(--gray);margin-bottom:8px}
+.ms-btns{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+.mb{padding:7px 14px;border-radius:7px;border:1px solid rgba(255,255,255,.14);background:transparent;color:var(--w);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.mb:hover{border-color:var(--gold);color:var(--gold)}
+.mb.act{background:var(--gold);border-color:var(--gold);color:var(--k)}
+.mb.done{opacity:.4}
+.mb:disabled{opacity:.2;cursor:default}
+
+/* Game area */
+.ga{width:100%;max-width:860px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 26px;margin-bottom:18px;backdrop-filter:blur(6px)}
+.gsb{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.st{text-align:center;flex:1}
+.st .sn{font-size:9px;letter-spacing:2px;color:var(--gray);text-transform:uppercase}
+.st .sf{font-size:40px;margin:4px 0;transition:transform .3s}
+.st .sc{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px}
+.st .sp{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--gold);line-height:1;transition:all .3s}
+.st .sp.scored{animation:scorePop .4s ease-out}
+@keyframes scorePop{0%{transform:scale(1)}50%{transform:scale(1.4);color:#fff}100%{transform:scale(1)}}
+.svs{font-family:'Bebas Neue',sans-serif;font-size:26px;color:rgba(255,255,255,.18);padding:0 14px;text-align:center}
+.svs small{display:block;font-size:9px;letter-spacing:2px;color:var(--gray);font-family:'Barlow',sans-serif}
+
+/* Question */
+.qmeta{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.qnum{background:var(--gold);color:var(--k);font-weight:900;font-size:10px;padding:3px 10px;border-radius:4px;letter-spacing:1px}
+.qtimer{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--gl);margin-left:auto;min-width:40px;text-align:right}
+.qtimer.urg{color:var(--red);animation:pulse .4s infinite alternate}
+.qtext{font-size:clamp(14px,2vw,19px);font-weight:700;line-height:1.4;margin-bottom:12px}
+
+/* Host options (read only) */
+.opts-host{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.opt-host{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:9px 12px;display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.3}
+.opt-host .olbl{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--gold);min-width:18px;line-height:1}
+.opt-host.correct-opt{background:rgba(37,168,82,.2);border-color:rgba(37,168,82,.5)}
+.opt-host.correct-opt .olbl{color:var(--gl)}
+
+/* Buzz area */
+.buzz-section{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:12px 16px;min-height:50px}
+.buzz-section.has-buzz{border-color:rgba(245,194,0,.4);background:rgba(245,194,0,.05)}
+.bl{font-size:10px;letter-spacing:1px;color:var(--gray);text-transform:uppercase;margin-bottom:8px}
+.buzz-entries{display:flex;flex-wrap:wrap;gap:7px}
+.be{display:flex;align-items:center;gap:7px;padding:5px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);font-size:12px;font-weight:700;transition:all .3s}
+.be.first{border-color:var(--gold);background:rgba(245,194,0,.1)}
+.be .bef{font-size:18px}
+.be .ben{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px}
+.be .bea{font-size:10px;color:var(--gray);margin-left:3px;text-transform:uppercase;letter-spacing:1px}
+.be.ans-ok{border-color:var(--gl)!important;background:rgba(37,168,82,.15)!important;color:var(--gl)!important}
+.be.ans-ok .bea{color:var(--gl)!important}
+.be.ans-no{border-color:var(--red)!important;background:rgba(230,57,57,.1)!important;color:var(--red)!important}
+.be.ans-no .bea{color:var(--red)!important}
+
+.ansr{margin-top:10px;padding:10px 14px;background:rgba(26,122,60,.2);border:1px solid rgba(37,168,82,.4);border-radius:7px;font-weight:700;font-size:14px;display:none}
+.ansr.show{display:block}
+.ansr span{color:var(--gl)}
+.hctrl{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.rbdg{display:inline-block;background:var(--green);color:var(--w);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:4px}
+
+/* Links */
+.lpan{width:100%;max-width:860px;display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:9px;margin-bottom:20px}
+.lc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:11px 13px;display:flex;flex-direction:column;gap:4px}
+.lcfl{font-size:22px}
+.lcnm{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--gold)}
+.lcurl{font-size:8px;color:var(--gray);word-break:break-all;line-height:1.4}
+.lccp{font-size:10px;background:rgba(255,255,255,.08);border:none;color:var(--w);border-radius:5px;padding:4px 8px;cursor:pointer;font-family:'Barlow',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:background .15s;align-self:flex-start;margin-top:2px}
+.lccp:hover{background:rgba(255,255,255,.18)}
+
+/* ════════════════ PLAYER ════════════════ */
+#ps{align-items:center;justify-content:center;padding:24px 16px;text-align:center;position:relative}
+
+.player-header{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;padding:18px 24px;margin-bottom:16px;
+  width:100%;max-width:480px;
+  display:flex;align-items:center;gap:16px;text-align:left;
+}
+.pfl{font-size:56px;filter:drop-shadow(0 0 16px rgba(245,194,0,.5));flex-shrink:0}
+.pinfo{}
+.pcn{font-family:'Bebas Neue',sans-serif;font-size:clamp(26px,6vw,44px);letter-spacing:3px;color:var(--gold);line-height:1}
+.prl{font-size:10px;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-top:3px}
+.psc{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--gray);letter-spacing:1px;margin-top:4px}
+.psc span{color:var(--gold);font-size:22px}
+
+.psb{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;padding:20px 22px;width:100%;max-width:480px;
+}
+
+/* Waiting */
+.wmsg{color:var(--gray);font-size:13px;letter-spacing:1px;text-transform:uppercase}
+.wdot{display:inline-block;animation:blink 1.2s infinite}
+.match-info-pill{
+  display:inline-block;background:rgba(245,194,0,.1);border:1px solid rgba(245,194,0,.2);
+  border-radius:20px;padding:4px 12px;font-size:11px;color:var(--gold);letter-spacing:1px;margin-top:10px;
+}
+
+/* Player question */
+.pqt{font-size:clamp(14px,3.5vw,19px);font-weight:700;line-height:1.4;margin-bottom:16px;text-align:left}
+
+.opts-player{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt-btn{
+  background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.14);
+  border-radius:11px;color:var(--w);padding:14px 12px;cursor:pointer;
+  font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;
+  text-align:left;display:flex;align-items:flex-start;gap:9px;
+  transition:all .15s;line-height:1.3;
+}
+.opt-btn:hover:not(:disabled){border-color:var(--gold);background:rgba(245,194,0,.1);transform:scale(1.02)}
+.opt-btn .olbl{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--gold);line-height:1;min-width:18px;flex-shrink:0}
+.opt-btn.selected{border-color:var(--gold);background:rgba(245,194,0,.12);animation:selectPop .2s ease-out}
+@keyframes selectPop{0%{transform:scale(.98)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+.opt-btn.rev-ok{border-color:var(--gl)!important;background:rgba(37,168,82,.22)!important;animation:revealOk .35s ease-out}
+.opt-btn.rev-no{border-color:rgba(230,57,57,.4)!important;background:rgba(230,57,57,.08)!important;opacity:.6}
+.opt-btn:disabled{cursor:default}
+@keyframes revealOk{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+
+/* Player result */
+.pstatus{text-align:center;padding:8px 0}
+.ps-icon{font-size:44px;margin-bottom:6px;display:block}
+.ps-txt{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px}
+.ps-sub{font-size:12px;color:var(--gray);margin-top:4px;letter-spacing:1px}
+
+/* Not in match notice */
+.bench-notice{text-align:center;padding:8px 0}
+.bench-icon{font-size:36px;margin-bottom:8px;display:block}
+.bench-txt{font-size:13px;color:var(--gray);letter-spacing:1px;text-transform:uppercase}
+
+/* ════════════════ OVERLAYS ════════════════ */
+.ov{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;opacity:0;pointer-events:none;transition:opacity .35s}
+.ov.show{opacity:1;pointer-events:all}
+
+/* Goal */
+#gov{background:rgba(0,0,0,.88)}
+.goal-ring{
+  width:240px;height:240px;border-radius:50%;
+  border:4px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+  box-shadow:0 0 60px rgba(245,194,0,.5),inset 0 0 40px rgba(245,194,0,.1);
+  animation:ringPulse 1s ease-in-out infinite alternate;
+  margin-bottom:16px;
+}
+@keyframes ringPulse{from{box-shadow:0 0 40px rgba(245,194,0,.4),inset 0 0 20px rgba(245,194,0,.08)}to{box-shadow:0 0 80px rgba(245,194,0,.7),inset 0 0 50px rgba(245,194,0,.15)}}
+.gtxt{font-family:'Bebas Neue',sans-serif;font-size:clamp(50px,12vw,100px);color:var(--gold);letter-spacing:6px;line-height:1;animation:gbounce .4s ease-out;text-shadow:0 0 40px rgba(245,194,0,.8)}
+.gball{font-size:48px;animation:spin 1s linear infinite}
+.gtnm{font-family:'Bebas Neue',sans-serif;font-size:clamp(22px,4vw,38px);color:var(--w);letter-spacing:4px;margin-bottom:6px}
+.gans{font-size:14px;color:rgba(255,255,255,.5);letter-spacing:1px}
+
+/* Winner */
+#wov{background:radial-gradient(circle at center,rgba(26,122,60,.5),rgba(0,0,0,.96));text-align:center;padding:30px}
+.wcup{font-size:72px;margin-bottom:12px;animation:float 2s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(245,194,0,.7))}
+.wlb{font-size:11px;letter-spacing:4px;color:var(--gl);text-transform:uppercase;margin-bottom:5px}
+.wnm{font-family:'Bebas Neue',sans-serif;font-size:clamp(42px,9vw,88px);color:var(--gold);letter-spacing:6px;text-shadow:0 0 60px rgba(245,194,0,.8)}
+.wfl{font-size:64px;margin:8px 0}
+.wsub{margin-top:14px;color:var(--gray);font-size:11px;letter-spacing:2px}
+
+/* Confetti overlay */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:998}
+
+/* misc */
+.ping{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--gl);letter-spacing:1px}
+.pd{width:6px;height:6px;border-radius:50%;background:var(--gl);animation:ping 1.5s ease-in-out infinite}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(15,15,15,.96);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:10px 18px;font-size:12px;letter-spacing:1px;z-index:1001;transition:transform .3s;white-space:nowrap;backdrop-filter:blur(8px)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@keyframes pulse{from{opacity:1}to{opacity:.35}}
+@keyframes blink{0%,80%{opacity:1}90%{opacity:0}100%{opacity:1}}
+@keyframes gbounce{0%{transform:scale(.4) rotate(-8deg);opacity:0}70%{transform:scale(1.1) rotate(2deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes ping{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.65)}}
+</style>
+</head>
+<body>
+
+<div class="bg-stadium"></div>
+<div id="floaters"></div>
+<canvas id="confetti-canvas"></canvas>
+
+<!-- Music toggle -->
+<div class="music-toggle" id="musicBtn" onclick="toggleMusic()" title="Música">🔇</div>
+
+<!-- ═══════════ LANDING ═══════════ -->
+<div id="ls" class="screen active">
+  <div class="stadium-lights"></div>
+  <div class="trophy-wrap"><div class="trophy">🏆</div></div>
+  <div class="title">MUNDIAL<br><span>2026</span></div>
+  <div class="title-year">QUIZ</div>
+  <div class="sub">Amalga Group &nbsp;·&nbsp; Team Wide Call</div>
+  <div class="flags-row">🇲🇽🇧🇷🇪🇸🇦🇷🇫🇷🇩🇪🇵🇹🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+  <div class="card">
+    <h2>¿Cómo entras?</h2>
+    <!-- HOST -->
+    <div class="fg">
+      <label>Room ID (host lo define)</label>
+      <input id="ri" type="text" placeholder="ej: amalga2026" maxlength="20"/>
+    </div>
+    <button class="btn btn-gold w100" style="margin-bottom:10px" onclick="goHost()">🎙 Entrar como HOST</button>
+    <div class="divider">o</div>
+    <!-- JUGADOR -->
+    <div class="fg">
+      <label>Tu equipo / país</label>
+      <select id="ts">
+        <option value="">— Elige tu selección —</option>
+        <option value="Mexico">🇲🇽 México</option>
+        <option value="Brasil">🇧🇷 Brasil</option>
+        <option value="España">🇪🇸 España</option>
+        <option value="Argentina">🇦🇷 Argentina</option>
+        <option value="Francia">🇫🇷 Francia</option>
+        <option value="Alemania">🇩🇪 Alemania</option>
+        <option value="Portugal">🇵🇹 Portugal</option>
+        <option value="Inglaterra">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Room ID del host <span style="color:var(--red)">*</span></label>
+      <input id="rip" type="text" placeholder="Pide el Room ID al host" maxlength="20"/>
+    </div>
+    <button class="btn btn-green w100" onclick="goPlayer()">⚽ Entrar como Jugador</button>
+  </div>
+</div>
+
+<!-- ═══════════ HOST ═══════════ -->
+<div id="hs" class="screen">
+  <div class="hh">
+    <button class="btn btn-ghost back-btn" onclick="goBack()" style="position:absolute;left:16px;top:16px;font-size:12px;padding:8px 14px;display:flex;align-items:center;gap:6px;">&#8592; Salir</button>
+    <button class="btn btn-red" onclick="resetAll()" style="position:absolute;right:16px;top:16px;font-size:11px;padding:8px 14px;">&#x21BA; Reset</button>
+    <h1>🏆 MUNDIAL 2026 QUIZ</h1>
+    <p>HOST &nbsp;·&nbsp; <span class="ping"><span class="pd"></span>EN VIVO</span> &nbsp;·&nbsp; Room: <strong id="rlb" style="color:var(--gold)"></strong></p>
+  </div>
+
+  <div class="bracket-scroll"><div class="bracket" id="bkt"></div></div>
+
+  <div class="ms-wrap">
+    <h3>Seleccionar Partido</h3>
+    <div class="ms-btns" id="mbtns"></div>
+  </div>
+
+  <div class="ga" id="ga" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div>
+        <span class="rbdg" id="rbdg">Cuartos</span>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--gray)" id="mtl">Partido</div>
+      </div>
+      <div style="font-size:10px;color:var(--gray);letter-spacing:1px">Pregunta <span id="qc">1</span> &nbsp;·&nbsp; <span style="color:var(--gold)">🏆 Primero en 3 goles</span></div>
+    </div>
+
+    <div class="gsb">
+      <div class="st">
+        <div class="sn">EQUIPO A</div>
+        <div class="sf" id="fA">🏳️</div>
+        <div class="sc" id="cnA">—</div>
+        <div class="sp" id="scA">0</div>
+      </div>
+      <div class="svs">VS<small>META: 3 ⚽</small></div>
+      <div class="st">
+        <div class="sn">EQUIPO B</div>
+        <div class="sf" id="fB">🏳️</div>
+        <div class="sc" id="cnB">—</div>
+        <div class="sp" id="scB">0</div>
+      </div>
+    </div>
+
+    <div class="qmeta">
+      <span class="qnum" id="qlb">PREGUNTA 1</span>
+      <span class="qtimer" id="qtmr">—</span>
+    </div>
+    <div class="qtext" id="qtxt">Selecciona un partido y presiona Iniciar</div>
+    <div class="opts-host" id="opts-host"></div>
+
+    <div class="buzz-section" id="bzbar">
+      <div class="bl">Esperando respuestas...</div>
+      <div class="buzz-entries" id="bzentries"></div>
+    </div>
+    <div class="ansr" id="ansr">✅ Respuesta correcta: <span id="ansrtxt"></span></div>
+
+    <div class="hctrl">
+      <button class="btn btn-gold" id="bsq" onclick="hStartQ()">▶ Iniciar Pregunta</button>
+      <button class="btn btn-green" id="bco" onclick="hCorrect()" disabled>✓ Correcto → Gol</button>
+      <button class="btn btn-red" id="bwr" onclick="hWrong()" disabled>✗ Incorrecto</button>
+      <button class="btn btn-ghost" id="brv" onclick="hReveal()" disabled>👁 Respuesta</button>
+      <button class="btn btn-ghost" id="bnx" onclick="hNext()" disabled>Siguiente →</button>
+    </div>
+  </div>
+
+  <div style="width:100%;max-width:860px;margin-bottom:8px">
+    <div style="font-size:10px;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-bottom:8px">🔗 Links rápidos</div>
+    <div id="qlinks" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px"></div>
+    <div style="font-size:10px;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-bottom:8px">🔗 Links por equipo — comparte con cada team</div>
+    <div class="lpan" id="lpan"></div>
+  </div>
+</div>
+
+<!-- ═══════════ PLAYER ═══════════ -->
+<div id="ps" class="screen">
+  <button class="btn btn-ghost back-btn" onclick="goBack()" style="position:absolute;left:16px;top:16px;font-size:12px;padding:8px 14px;z-index:10;display:flex;align-items:center;gap:6px;">&#8592; Salir</button>
+  <div class="player-header">
+    <div class="pfl" id="pfl">⚽</div>
+    <div class="pinfo">
+      <div class="pcn" id="pcn">...</div>
+      <div class="prl"><span class="ping"><span class="pd"></span>Conectado</span></div>
+      <div class="psc">Goles: <span id="pg">0</span></div>
+    </div>
+  </div>
+
+  <div class="psb" id="psb">
+    <!-- Waiting -->
+    <div id="pwait">
+      <div style="font-size:32px;margin-bottom:10px">⏳</div>
+      <div class="wmsg">Esperando al host<span class="wdot">...</span></div>
+      <div id="pminfo"></div>
+    </div>
+    <!-- Active question -->
+    <div id="pact" style="display:none">
+      <div class="pqt" id="pqtxt">—</div>
+      <div class="opts-player" id="opts-player"></div>
+    </div>
+    <!-- Result -->
+    <div id="pbzd" style="display:none">
+      <div class="pstatus">
+        <span class="ps-icon" id="bri">⚡</span>
+        <div class="ps-txt" id="brt">—</div>
+        <div class="ps-sub" id="brsub"></div>
+      </div>
+    </div>
+    <!-- Bench (not in this match) -->
+    <div id="pbench" style="display:none">
+      <div class="bench-notice">
+        <span class="bench-icon">🪑</span>
+        <div class="bench-txt">No juegas este partido</div>
+        <div style="font-size:11px;color:var(--gray);margin-top:6px">Espera tu turno y anima a tu equipo</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GOAL OVERLAY -->
+<div class="ov" id="gov">
+  <div class="goal-ring">
+    <div class="gball">⚽</div>
+    <div class="gtxt">GOL!</div>
+  </div>
+  <div class="gtnm" id="gtnm"></div>
+  <div class="gans" id="gans"></div>
+</div>
+
+<!-- WINNER OVERLAY -->
+<div class="ov" id="wov">
+  <div class="wcup">🏆</div>
+  <div class="wlb">¡Campeón del Partido!</div>
+  <div class="wfl" id="wfl"></div>
+  <div class="wnm" id="wnm"></div>
+  <div class="wsub">AVANZA A LA SIGUIENTE RONDA</div>
+  <button class="btn btn-gold" style="margin-top:18px" onclick="closeW()">Continuar →</button>
+</div>
+
+<div class="toast" id="tst"></div>
+
+<script>
+// ══════════════════════════════════════════
+// AUDIO ENGINE (Web Audio API — no server needed)
+// ══════════════════════════════════════════
+const AC = new (window.AudioContext || window.webkitAudioContext)();
+let bgGainNode = null, bgPlaying = false, musicOn = false;
+
+function unlockAudio(){if(AC.state==='suspended')AC.resume();}
+
+function playTone(freq,dur,type='sine',vol=0.3,delay=0){
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.connect(g);g.connect(AC.destination);
+  o.type=type;o.frequency.setValueAtTime(freq,AC.currentTime+delay);
+  g.gain.setValueAtTime(0,AC.currentTime+delay);
+  g.gain.linearRampToValueAtTime(vol,AC.currentTime+delay+0.02);
+  g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+delay+dur);
+  o.start(AC.currentTime+delay);o.stop(AC.currentTime+delay+dur+0.05);
+}
+
+// Vuvuzela-ish crowd hum + rhythmic beat
+function startBGMusic(){
+  if(bgPlaying)return;
+  bgPlaying=true;
+  bgGainNode=AC.createGain();bgGainNode.gain.value=0.18;
+  bgGainNode.connect(AC.destination);
+
+  // Crowd noise (filtered white noise)
+  const bufSize=AC.sampleRate*2;
+  const buf=AC.createBuffer(1,bufSize,AC.sampleRate);
+  const d=buf.getChannelData(0);
+  for(let i=0;i<bufSize;i++)d[i]=(Math.random()*2-1)*0.4;
+  const src=AC.createBufferSource();src.buffer=buf;src.loop=true;
+  const filt=AC.createBiquadFilter();filt.type='bandpass';filt.frequency.value=400;filt.Q.value=0.5;
+  src.connect(filt);filt.connect(bgGainNode);
+  src.start();
+
+  // Rhythmic kick drum pattern
+  function kick(){
+    const o=AC.createOscillator(),g=AC.createGain(),g2=AC.createGain();
+    o.connect(g);g.connect(g2);g2.connect(AC.destination);
+    g2.gain.value=0.25;
+    o.frequency.setValueAtTime(150,AC.currentTime);
+    o.frequency.exponentialRampToValueAtTime(40,AC.currentTime+0.15);
+    g.gain.setValueAtTime(1,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.25);
+    o.start(AC.currentTime);o.stop(AC.currentTime+0.3);
+  }
+  function snare(){
+    const bufS=AC.sampleRate*0.1;
+    const b=AC.createBuffer(1,bufS,AC.sampleRate);
+    const dd=b.getChannelData(0);
+    for(let i=0;i<bufS;i++)dd[i]=(Math.random()*2-1);
+    const s=AC.createBufferSource();s.buffer=b;
+    const f=AC.createBiquadFilter();f.type='highpass';f.frequency.value=2000;
+    const g=AC.createGain();g.gain.value=0.12;
+    s.connect(f);f.connect(g);g.connect(AC.destination);
+    s.start();s.stop(AC.currentTime+0.1);
+  }
+
+  // BPM ~120 pattern
+  let beat=0;
+  window._beatInt=setInterval(()=>{
+    if(!bgPlaying)return;
+    if(beat%4===0||beat%4===2)kick();
+    if(beat%4===2)setTimeout(snare,100);
+    // Hi-hat
+    playTone(8000,0.05,'square',0.04);
+    beat++;
+  },250);
+
+  // Melody — simple fanfare loop
+  const melody=[523,659,784,1047,784,659,523,0,392,523,659,523,0,0];
+  let mi=0;
+  window._melInt=setInterval(()=>{
+    if(!bgPlaying)return;
+    const f=melody[mi%melody.length];
+    if(f>0)playTone(f,0.18,'triangle',0.08);
+    mi++;
+  },300);
+}
+
+function stopBGMusic(){
+  bgPlaying=false;
+  if(bgGainNode){bgGainNode.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.5);}
+  clearInterval(window._beatInt);clearInterval(window._melInt);
+  bgGainNode=null;
+}
+
+function toggleMusic(){
+  unlockAudio();
+  musicOn=!musicOn;
+  const btn=document.getElementById('musicBtn');
+  if(musicOn){startBGMusic();btn.textContent='🔊';btn.classList.add('playing');}
+  else{stopBGMusic();btn.textContent='🔇';btn.classList.remove('playing');}
+}
+
+// SFX
+function sfxBuzz(){
+  unlockAudio();
+  playTone(880,0.06,'square',0.2);
+  playTone(1100,0.06,'square',0.2,0.07);
+}
+function sfxGol(){
+  unlockAudio();
+  // Crowd roar sweep + fanfare
+  [523,659,784,1047,1047,1319].forEach((f,i)=>playTone(f,0.2,'triangle',0.15,i*0.1));
+  // Crowd noise burst
+  const b=AC.createBuffer(1,AC.sampleRate*1.5,AC.sampleRate);
+  const d=b.getChannelData(0);for(let i=0;i<b.length;i++)d[i]=(Math.random()*2-1)*0.6;
+  const s=AC.createBufferSource();s.buffer=b;s.loop=false;
+  const f=AC.createBiquadFilter();f.type='bandpass';f.frequency.value=600;f.Q.value=0.3;
+  const g=AC.createGain();g.gain.setValueAtTime(0.4,AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+1.5);
+  s.connect(f);f.connect(g);g.connect(AC.destination);s.start();s.stop(AC.currentTime+1.5);
+}
+function sfxCorrect(){
+  unlockAudio();
+  [523,659,784].forEach((f,i)=>playTone(f,0.15,'sine',0.2,i*0.08));
+}
+function sfxWrong(){
+  unlockAudio();
+  playTone(200,0.3,'sawtooth',0.2);
+  playTone(180,0.3,'sawtooth',0.15,0.05);
+}
+function sfxTick(){unlockAudio();playTone(1200,0.04,'square',0.08);}
+function sfxWinner(){
+  unlockAudio();
+  const fanfare=[523,523,523,415,523,0,622,523,0,392,392,392,349,440,523,0,494,523];
+  fanfare.forEach((f,i)=>{if(f>0)playTone(f,0.22,'triangle',0.25,i*0.12);});
+}
+function sfxSelect(){unlockAudio();playTone(660,0.08,'sine',0.15);}
+
+// ══════════════════════════════════════════
+// CONFETTI
+// ══════════════════════════════════════════
+const cvs=document.getElementById('confetti-canvas');
+const ctx2=cvs.getContext('2d');
+let confParts=[],confAnim=null;
+
+function launchConfetti(){
+  cvs.width=window.innerWidth;cvs.height=window.innerHeight;
+  confParts=[];
+  const colors=['#f5c200','#25a852','#e63939','#fff','#1a6bb0','#ff6b35'];
+  for(let i=0;i<180;i++){
+    confParts.push({
+      x:Math.random()*cvs.width,y:-20,
+      vx:(Math.random()-.5)*6,vy:Math.random()*4+2,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      size:Math.random()*8+4,rot:Math.random()*360,vr:(Math.random()-.5)*8,
+      shape:Math.random()>.5?'rect':'circle',
+    });
+  }
+  if(confAnim)cancelAnimationFrame(confAnim);
+  animConf();
+  setTimeout(()=>{cancelAnimationFrame(confAnim);ctx2.clearRect(0,0,cvs.width,cvs.height);},4000);
+}
+
+function animConf(){
+  ctx2.clearRect(0,0,cvs.width,cvs.height);
+  confParts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.vy+=0.08;p.rot+=p.vr;
+    ctx2.save();ctx2.translate(p.x,p.y);ctx2.rotate(p.rot*Math.PI/180);
+    ctx2.fillStyle=p.color;ctx2.globalAlpha=p.y>cvs.height?.0:1;
+    if(p.shape==='rect'){ctx2.fillRect(-p.size/2,-p.size/4,p.size,p.size/2);}
+    else{ctx2.beginPath();ctx2.arc(0,0,p.size/2,0,Math.PI*2);ctx2.fill();}
+    ctx2.restore();
+  });
+  confParts=confParts.filter(p=>p.y<cvs.height+30);
+  if(confParts.length)confAnim=requestAnimationFrame(animConf);
+}
+
+// ══════════════════════════════════════════
+// FLOATING ELEMENTS
+// ══════════════════════════════════════════
+const FLOATS=['⚽','🏆','⭐','🎉','🌟','🎊','🏅','🌍','🇲🇽','🇧🇷'];
+function initFloaters(){
+  const wrap=document.getElementById('floaters');
+  for(let i=0;i<18;i++){
+    const el=document.createElement('div');
+    el.className='floater';
+    el.textContent=FLOATS[Math.floor(Math.random()*FLOATS.length)];
+    el.style.left=Math.random()*100+'vw';
+    el.style.animationDuration=(Math.random()*14+10)+'s';
+    el.style.animationDelay=(Math.random()*15)+'s';
+    el.style.fontSize=(Math.random()*20+14)+'px';
+    wrap.appendChild(el);
+  }
+}
+initFloaters();
+
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const T={
+  Mexico:{f:'🇲🇽'},Brasil:{f:'🇧🇷'},España:{f:'🇪🇸'},Argentina:{f:'🇦🇷'},
+  Francia:{f:'🇫🇷'},Alemania:{f:'🇩🇪'},Portugal:{f:'🇵🇹'},Inglaterra:{f:'🏴󠁧󠁢󠁥󠁮󠁧󠁿'}
+};
+
+// Questions with 4 options. correctIndex = index of correct answer (0-based)
+const QS=[
+  // ── MUNDIAL 2026 ──
+  {q:"¿En qué estadio se jugará el partido inaugural del Mundial 2026?",opts:["Estadio Azteca","Estadio BBVA","Estadio Akron","MetLife Stadium"],c:0},
+  {q:"¿Cuántos equipos participarán en el Mundial 2026?",opts:["32 equipos","40 equipos","48 equipos","64 equipos"],c:2},
+  {q:"¿En qué tres países se celebra el Mundial 2026?",opts:["México, Brasil y Argentina","México, EU y Canadá","EU, Canadá y Colombia","México, EU y España"],c:1},
+  {q:"¿En qué fecha arranca el Mundial 2026?",opts:["1 de junio","11 de junio","20 de junio","5 julio"],c:1},
+  {q:"¿Cuántas veces ha organizado México el Mundial contando 2026?",opts:["1 vez","2 veces","3 veces","4 veces"],c:2},
+  {q:"¿En qué grupo quedó México en el sorteo del Mundial 2026?",opts:["Grupo B","Grupo C","Grupo D","Grupo A"],c:3},
+  {q:"¿Cuál es el primer rival de México en la fase de grupos?",opts:["Corea del Sur","Francia","Sudáfrica","Alemania"],c:2},
+  {q:"¿Dónde se jugará la Final del Mundial 2026?",opts:["Estadio Azteca","Wembley","MetLife Stadium NY/NJ","Hard Rock Stadium"],c:2},
+  {q:"¿Cuántos partidos en total se disputarán en el Mundial 2026?",opts:["64 partidos","80 partidos","96 partidos","104 partidos"],c:3},
+  {q:"¿Cuáles son las 3 ciudades mexicanas sede del Mundial 2026?",opts:["CDMX, Monterrey y Tijuana","CDMX, GDL y Monterrey","GDL, Monterrey y Puebla","CDMX, GDL y Cancún"],c:1},
+  {q:"¿Cuántos partidos albergará el Estadio Azteca en el Mundial 2026?",opts:["3 partidos","4 partidos","5 partidos","6 partidos"],c:2},
+  {q:"¿Qué récord histórico tendrá el Estadio Azteca en 2026?",opts:["Estadio más grande del mundo","Primer estadio en organizar 3 Mundiales","Estadio con más goles en Mundiales","Estadio más antiguo en un Mundial"],c:1},
+  {q:"¿Cuál es el segundo rival de México en la fase de grupos del Mundial 2026?",opts:["Japón","Francia","Corea del Sur","Portugal"],c:2},
+  {q:"¿Cuántos grupos habrá en el Mundial 2026?",opts:["8 grupos","10 grupos","12 grupos","16 grupos"],c:2},
+  {q:"¿Cuándo es la final del Mundial 2026?",opts:["5 julio 2026","12 julio 2026","19 julio 2026","26 julio 2026"],c:2},
+  {q:"¿En qué estadio de Monterrey se juega el Repechaje Intercontinental 2026?",opts:["Estadio Universitario","Estadio BBVA","Estadio Tecnológico","Estadio Olímpico"],c:1},
+  {q:"¿Cuántos partidos de grupo jugará México en suelo mexicano?",opts:["1 partido","2 partidos","Solo la final si clasifica","Los 3 partidos de grupo"],c:3},
+  {q:"¿Cuántos equipos europeos clasifican directamente al Mundial 2026?",opts:["12 equipos","14 equipos","16 equipos","18 equipos"],c:2},
+  {q:"¿Cuántos equipos de CONMEBOL (Sudamérica) clasifican al Mundial 2026?",opts:["4 equipos","6 equipos","8 equipos","10 equipos"],c:1},
+  {q:"¿Qué selección es la cabeza del Grupo A en el Mundial 2026?",opts:["Estados Unidos","Brasil","México","Argentina"],c:2},
+  {q:"¿En qué año fue el primer Mundial organizado por México?",opts:["1966","1970","1978","1982"],c:1},
+  {q:"¿Cuál fue el resultado del sorteo del Mundial 2026 en cuanto a grupos?",opts:["8 grupos de 6","10 grupos de 4","12 grupos de 4","16 grupos de 3"],c:2},
+  {q:"¿Qué país organiza el Mundial 2026 por primera vez?",opts:["México","Estados Unidos","Canadá","Brasil"],c:2},
+  {q:"¿Cuántos estadios hay en México para el Mundial 2026?",opts:["1 estadio","2 estadios","3 estadios","4 estadios"],c:2},
+  {q:"¿Cuántos estadios hay en Estados Unidos para el Mundial 2026?",opts:["8 estadios","9 estadios","11 estadios","13 estadios"],c:2},
+  {q:"¿Dónde se realizó el sorteo del Mundial 2026?",opts:["Nueva York","Washington D.C.","Los Ángeles","Miami"],c:1},
+  {q:"¿En qué mes termina el Mundial 2026?",opts:["Junio","Julio","Agosto","Septiembre"],c:1},
+  {q:"¿Cuántos partidos más que Qatar 2022 habrá en el Mundial 2026?",opts:["20 partidos más","40 partidos más","44 partidos más","32 partidos más"],c:1},
+  {q:"¿En qué estadio de Guadalajara se jugará el Mundial 2026?",opts:["Estadio Chivas","Estadio Jalisco","Estadio Akron","Estadio Atlas"],c:2},
+  {q:"¿Cuántos equipos de África clasifican al Mundial 2026?",opts:["5 equipos","7 equipos","9 equipos","11 equipos"],c:2},
+  // ── HISTORIA DEL FÚTBOL ──
+  {q:"¿Quién ganó el Mundial Qatar 2022?",opts:["Francia","Brasil","Argentina","Alemania"],c:2},
+  {q:"¿Quién marcó el último penal de la Final de Qatar 2022 para Argentina?",opts:["Mbappé","Messi","Di María","Gonzalo Montiel"],c:3},
+  {q:"¿Cuántos goles marcó Kylian Mbappé en la Final de Qatar 2022?",opts:["1 gol","2 goles","3 goles","4 goles"],c:2},
+  {q:"¿En qué país se celebró el primer Mundial de fútbol?",opts:["Brasil","Argentina","Uruguay","Chile"],c:2},
+  {q:"¿En qué año fue el primer Mundial de fútbol?",opts:["1924","1930","1934","1938"],c:1},
+  {q:"¿Cuántos Mundiales ha ganado Brasil?",opts:["3","4","5","6"],c:2},
+  {q:"¿Quién es el máximo goleador en la historia de los Mundiales?",opts:["Pelé","Ronaldo (Brasil)","Miroslav Klose","Messi"],c:2},
+  {q:"¿Cuántos goles tiene Miroslav Klose en Mundiales?",opts:["14 goles","16 goles","18 goles","20 goles"],c:1},
+  {q:"¿Cuál es el único jugador con dos Mundiales ganados como capitán?",opts:["Pelé","Diego Maradona","Didier Deschamps","Lionel Messi"],c:3},
+  {q:"¿En qué año ganó Francia su primer Mundial?",opts:["1994","1998","2002","2006"],c:1},
+  {q:"¿Cuántos goles marcó Eusébio en el Mundial de 1966?",opts:["6 goles","7 goles","9 goles","11 goles"],c:2},
+  {q:"¿En qué año le ganó México a Alemania en el Mundial de Rusia?",opts:["2010","2014","2018","2022"],c:2},
+  {q:"¿Cuántas veces ha llegado México al 'Quinto Partido' en un Mundial?",opts:["0 veces","1 vez","2 veces","Ninguna, siempre cae en octavos"],c:3},
+  {q:"¿En qué Mundial se dio el 'Partido del Siglo' entre Italia y Alemania?",opts:["1966","1970","1974","1978"],c:1},
+  {q:"¿Qué selección eliminó a México en el Mundial de Rusia 2018?",opts:["Alemania","Brasil","Francia","Argentina"],c:1},
+  // ── JUGADORES Y CLUBES ──
+  {q:"¿De qué club es hincha Lionel Messi de toda la vida?",opts:["River Plate","Boca Juniors","Newell's Old Boys","Racing Club"],c:2},
+  {q:"¿Con qué club debutó Cristiano Ronaldo profesionalmente?",opts:["Sporting Lisboa","Manchester United","Real Madrid","Juventus"],c:0},
+  {q:"¿Cuántos Balones de Oro tiene Lionel Messi?",opts:["6","7","8","9"],c:2},
+  {q:"¿Quién es el máximo goleador en la historia del Real Madrid?",opts:["Raúl","Cristiano Ronaldo","Benzema","Hugo Sánchez"],c:1},
+  {q:"¿En qué equipo juega actualmente Vinicius Jr.?",opts:["Barcelona","Manchester City","Real Madrid","PSG"],c:2},
+  {q:"¿Qué jugador lleva el número 10 histórico de la Selección Mexicana?",opts:["Chicharito","Cuauhtémoc Blanco","Hugo Sánchez","Andrés Guardado"],c:1},
+  {q:"¿Cuántos goles marcó Hugo Sánchez en la Liga española?",opts:["208 goles","234 goles","260 goles","290 goles"],c:1},
+  {q:"¿En qué equipo juega actualmente Lamine Yamal?",opts:["Real Madrid","Atlético de Madrid","Barcelona","PSG"],c:2},
+  {q:"¿Cuál es el apodo de Javier Hernández?",opts:["El Piojo","El Matador","Chicharito","El Chino"],c:2},
+  {q:"¿De qué país es Erling Haaland?",opts:["Suecia","Dinamarca","Noruega","Finlandia"],c:2},
+  // ── LIGAS Y COMPETENCIAS ──
+  {q:"¿Cuántos equipos participan en la Champions League actualmente?",opts:["32 equipos","36 equipos","48 equipos","24 equipos"],c:1},
+  {q:"¿Cuál es el equipo con más Champions League ganadas?",opts:["Barcelona","Bayern Munich","Real Madrid","AC Milan"],c:2},
+  {q:"¿Cuántos títulos de Champions tiene el Real Madrid?",opts:["12","14","15","16"],c:2},
+  {q:"¿En qué país se juega la Liga MX?",opts:["México","Colombia","Argentina","Chile"],c:0},
+  {q:"¿Cuál es el equipo más ganador de la Liga MX?",opts:["América","Chivas","Cruz Azul","Tigres"],c:0},
+  {q:"¿Cuántos equipos hay en la Liga MX (Apertura/Clausura)?",opts:["14 equipos","16 equipos","18 equipos","20 equipos"],c:2},
+  {q:"¿En qué año se fundó la FIFA?",opts:["1900","1904","1908","1912"],c:1},
+  {q:"¿Cuántos países miembro tiene la FIFA aproximadamente?",opts:["180","200","211","230"],c:2},
+  {q:"¿Quién ganó la última Copa América antes de 2026?",opts:["Brasil","Uruguay","Argentina","Colombia"],c:2},
+  {q:"¿Qué selección ganó la Eurocopa 2024?",opts:["Francia","Alemania","España","Portugal"],c:2},
+  // ── CURIOSIDADES ──
+  {q:"¿De qué material está hecho el trofeo de la Copa del Mundo?",opts:["Plata y oro","Oro sólido","Oro con base de malaquita","Platino con diamantes"],c:2},
+  {q:"¿Cuánto pesa el trofeo de la Copa del Mundo FIFA?",opts:["4.97 kg","6.17 kg","8.5 kg","3.2 kg"],c:1},
+  {q:"¿Cómo se llama el balón oficial del Mundial 2026?",opts:["Jabulani","Brazuca","Telstar","Adidas Puma X26"],c:2},
+  {q:"¿Cuál es el himno más famoso que suena en los estadios del Mundial?",opts:["We Are The Champions","Ole Ole Ole","Seven Nation Army","We Will Rock You"],c:2},
+  {q:"¿En qué año se introdujo el VAR (árbitro de video) en el Mundial?",opts:["2014","2018","2022","2010"],c:1},
+  {q:"¿Cuántos árbitros hay en la cancha en un partido de fútbol?",opts:["1","3","4","5"],c:1},
+  {q:"¿Cuántos metros mide un campo de fútbol reglamentario en longitud?",opts:["90-100 m","100-110 m","105 m (estándar FIFA)","120 m"],c:2},
+  {q:"¿Cada cuántos años se celebra la Copa del Mundo de fútbol?",opts:["2 años","3 años","4 años","5 años"],c:2},
+];
+
+const BRACKET=[
+  {id:'q1',round:'Cuartos de Final',label:'Cuartos A',teams:['Mexico','Brasil'],score:[0,0],winner:null},
+  {id:'q2',round:'Cuartos de Final',label:'Cuartos B',teams:['España','Argentina'],score:[0,0],winner:null},
+  {id:'q3',round:'Cuartos de Final',label:'Cuartos C',teams:['Francia','Alemania'],score:[0,0],winner:null},
+  {id:'q4',round:'Cuartos de Final',label:'Cuartos D',teams:['Portugal','Inglaterra'],score:[0,0],winner:null},
+  {id:'s1',round:'Semifinal',label:'Semifinal 1',teams:[null,null],score:[0,0],winner:null},
+  {id:'s2',round:'Semifinal',label:'Semifinal 2',teams:[null,null],score:[0,0],winner:null},
+  {id:'f1',round:'GRAN FINAL 🏆',label:'GRAN FINAL',teams:[null,null],score:[0,0],winner:null},
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let S={room:'',role:'',team:'',activeMatch:null,qIdx:0,qActive:false,firstBuzz:null,answers:{},bracket:JSON.parse(JSON.stringify(BRACKET)),usedQs:[],curQ:null};
+let tmrInt=null,tmrSec=20,lastBuzzTs=0,lastEvTs=0,toastTmr=null;
+
+const gk=k=>`mq_${S.room}_${k}`;
+const pub=(ev,d)=>{
+  if(!S.room)return;
+  const p={event:ev,data:d,ts:Date.now()};
+  localStorage.setItem(gk('ev'),JSON.stringify(p));
+  if(window._bc)window._bc.postMessage(p);
+};
+
+// ── ROUTING ──
+function ss(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+
+function goHost(){
+  unlockAudio();
+  const r=document.getElementById('ri').value.trim().toLowerCase().replace(/\s+/g,'-')||'amalga2026';
+  S.room=r;S.role='host';
+  lastEvTs=Date.now();lastBuzzTs=Date.now();
+  // Restaurar bracket guardado si existe
+  try{
+    const saved=localStorage.getItem(`mq_${r}_bracket`);
+    if(saved)S.bracket=JSON.parse(saved);
+    else S.bracket=JSON.parse(JSON.stringify(BRACKET));
+  }catch{S.bracket=JSON.parse(JSON.stringify(BRACKET));}
+  setupBC();renderHost();ss('hs');
+  document.getElementById('rlb').textContent=r;
+  renderLinks();
+}
+function goPlayer(){
+  unlockAudio();
+  const r=document.getElementById('rip').value.trim().toLowerCase().replace(/\s+/g,'-');
+  if(!r){toast('¡Ingresa el Room ID del host primero!');document.getElementById('rip').focus();return;}
+  const t=document.getElementById('ts').value;
+  if(!t){toast('¡Elige tu equipo primero!');return;}
+  S.room=r;S.role='player';S.team=t;
+  lastEvTs=Date.now();lastBuzzTs=Date.now();
+  setupBC();renderPlayer();ss('ps');startPoll();
+}
+
+function goBack(){
+  if(window._bc){try{window._bc.close();}catch{}}
+  window._bc=null;
+  // Limpiar datos de sesión del localStorage
+  if(S.room){
+    try{localStorage.removeItem(gk('ev'));localStorage.removeItem(gk('buzz'));}catch{}
+  }
+  S.role=null;S.room=null;S.team=null;S.activeMatch=null;S.qActive=false;S.curQ=null;S.firstBuzz=null;S.answers={};
+  lastEvTs=0;lastBuzzTs=0;
+  ss('ls');
+}
+
+function setupBC(){
+  if(typeof BroadcastChannel!=='undefined'){
+    window._bc=new BroadcastChannel(`mq_${S.room}`);
+    window._bc.onmessage=e=>handleEv(e.data);
+  }
+}
+
+function startPoll(){
+  setInterval(()=>{
+    try{const raw=localStorage.getItem(gk('ev'));
+      if(raw){const e=JSON.parse(raw);if(e.ts>lastEvTs){lastEvTs=e.ts;handleEv(e);}}}catch{}
+    updPGoals();
+  },250);
+}
+
+window.addEventListener('storage',e=>{
+  if(!S.room)return;
+  if(e.key===gk('ev')){try{const ev=JSON.parse(e.newValue);if(ev&&ev.ts>lastEvTs){lastEvTs=ev.ts;handleEv(ev);}}catch{}}
+  if(e.key===gk('buzz')&&S.role==='host'){try{const b=JSON.parse(e.newValue);if(b&&b.ts>lastBuzzTs){lastBuzzTs=b.ts;onBuzz(b);}}catch{}}
+});
+
+function handleEv(ev){
+  if(!ev)return;
+  if(ev.event==='question_start'&&S.role==='player')pQStart(ev.data);
+  else if(ev.event==='buzz'&&S.role==='host')onBuzz(ev.data);
+  else if(ev.event==='question_end'&&S.role==='player')pQEnd(ev.data);
+  else if(ev.event==='goal'){showGoal(ev.data.team,ev.data.answer);}
+  else if(ev.event==='match_winner'&&S.role!=='host')showWin(ev.data.team);
+}
+
+// ══════════════════════════════════════════
+// HOST
+// ══════════════════════════════════════════
+function saveBracket(){
+  if(!S.room)return;
+  try{localStorage.setItem(`mq_${S.room}_bracket`,JSON.stringify(S.bracket));}catch{}
+}
+
+function resetAll(){
+  if(!confirm('¿Resetear todos los marcadores y el bracket? Esto no se puede deshacer.'))return;
+  S.bracket=JSON.parse(JSON.stringify(BRACKET));
+  S.activeMatch=null;S.qIdx=0;S.qActive=false;S.firstBuzz=null;S.answers={};S.curQ=null;S.usedQs=[];
+  // Limpiar localStorage del room
+  try{
+    localStorage.removeItem(`mq_${S.room}_bracket`);
+    BRACKET.forEach(m=>{
+      m.teams.forEach(t=>{if(t)localStorage.removeItem(gk(`goals_${t}`));});
+    });
+    // También limpiar equipos de semis/final que pueden haber avanzado
+    ['Mexico','Brasil','España','Argentina','Francia','Alemania','Portugal','Inglaterra'].forEach(t=>{
+      localStorage.removeItem(gk(`goals_${t}`));
+    });
+  }catch{}
+  clearInterval(tmrInt);tmrInt=null;S.qActive=false;
+  document.getElementById('ga').style.display='none';
+  renderBkt();renderMBtns();
+  toast('✅ Marcadores reseteados');
+}
+
+function renderHost(){renderBkt();renderMBtns()}
+
+function renderBkt(){
+  const b=S.bracket,q=b.slice(0,4),sm=b.slice(4,6),fn=b[6];
+  document.getElementById('bkt').innerHTML=`
+    <div class="bround">${q.slice(0,2).map(mc).join('')}</div>
+    <div class="barrow">&#8594;</div>
+    <div class="bround mid">${[sm[0]].map(mc).join('')}</div>
+    <div class="barrow">&#8594;</div>
+    <div class="bround mid" style="min-width:185px">${mc(fn)}</div>
+    <div class="barrow">&#8592;</div>
+    <div class="bround mid">${[sm[1]].map(mc).join('')}</div>
+    <div class="barrow">&#8592;</div>
+    <div class="bround">${q.slice(2,4).map(mc).join('')}</div>`;
+}
+
+function mc(m){
+  return`<div class="mc ${S.activeMatch===m.id?'act':''} ${m.winner?'done':''}" onclick="selMatch('${m.id}')">
+    ${m.teams.map((t,i)=>`<div class="mt ${m.winner===t?'win':''}">
+      <span class="mfl">${t?T[t]?.f:'·'}</span>
+      <span class="mname">${t?t.toUpperCase():'?'}</span>
+      <span class="msc">${m.score[i]}</span></div>`).join('')}
+    <div class="mlb">${m.label}</div></div>`;
+}
+
+function renderMBtns(){
+  document.getElementById('mbtns').innerHTML=S.bracket.map(m=>`
+    <button class="mb ${S.activeMatch===m.id?'act':''} ${m.winner?'done':''}"
+      ${!m.teams[0]||!m.teams[1]?'disabled':''} onclick="selMatch('${m.id}')">
+      ${m.teams[0]?(T[m.teams[0]]?.f+' '+m.teams[0]):'?'} <span style="opacity:.4">vs</span> ${m.teams[1]?(T[m.teams[1]]?.f+' '+m.teams[1]):'?'}
+      <span style="font-size:9px;opacity:.5;margin-left:4px">&middot; ${m.label}</span>
+    </button>`).join('');
+}
+
+function selMatch(id){
+  const m=S.bracket.find(x=>x.id===id);
+  if(!m||!m.teams[0]||!m.teams[1]){toast('Partido no disponible aún');return;}
+  S.activeMatch=id;S.qIdx=0;S.qActive=false;S.firstBuzz=null;S.answers={};
+  renderBkt();renderMBtns();
+  const ga=document.getElementById('ga');ga.style.display='block';
+  ga.scrollIntoView({behavior:'smooth',block:'center'});
+  document.getElementById('rbdg').textContent=m.round;
+  document.getElementById('mtl').textContent=m.label;
+  updHSB(m);
+  document.getElementById('qtxt').textContent='Presiona "Iniciar Pregunta" para comenzar';
+  document.getElementById('opts-host').innerHTML='';
+  resetBuzzBar();
+  document.getElementById('ansr').classList.remove('show');
+  document.getElementById('qc').textContent='1';
+  document.getElementById('qlb').textContent='PREGUNTA 1';
+  resetBtns();
+}
+
+function updHSB(m){
+  const[tA,tB]=m.teams;
+  document.getElementById('fA').textContent=tA?T[tA]?.f:'?';
+  document.getElementById('cnA').textContent=tA?`${T[tA]?.f} ${tA.toUpperCase()}`:'?';
+  document.getElementById('scA').textContent=m.score[0];
+  document.getElementById('fB').textContent=tB?T[tB]?.f:'?';
+  document.getElementById('cnB').textContent=tB?`${T[tB]?.f} ${tB.toUpperCase()}`:'?';
+  document.getElementById('scB').textContent=m.score[1];
+}
+
+function getQ(){
+  const avail=QS.map((_,i)=>i).filter(i=>!S.usedQs.includes(i));
+  if(!avail.length){S.usedQs=[];return getQ();}
+  const idx=avail[Math.floor(Math.random()*avail.length)];
+  S.usedQs.push(idx);return QS[idx];
+}
+
+function hStartQ(){
+  if(!S.activeMatch)return;
+  const m=S.bracket.find(x=>x.id===S.activeMatch);
+  const q=getQ();S.curQ=q;S.firstBuzz=null;S.answers={};S.qActive=true;
+
+  document.getElementById('qtxt').textContent=q.q;
+  document.getElementById('ansrtxt').textContent=q.opts[q.c];
+
+  // Render host options (A B C D labels)
+  const LABS=['A','B','C','D'];
+  document.getElementById('opts-host').innerHTML=q.opts.map((o,i)=>`
+    <div class="opt-host" id="opt-host-${i}">
+      <span class="olbl">${LABS[i]}</span>${o}
+    </div>`).join('');
+
+  resetBuzzBar();
+  document.getElementById('ansr').classList.remove('show');
+  document.getElementById('bsq').disabled=true;
+  document.getElementById('bco').disabled=true;
+  document.getElementById('bwr').disabled=true;
+  document.getElementById('brv').disabled=false;
+  document.getElementById('bnx').disabled=true;
+
+  pub('question_start',{q:q.q,opts:q.opts,teams:m.teams,matchId:m.id});
+  startTmr();
+}
+
+function resetBuzzBar(){
+  const bar=document.getElementById('bzbar');
+  bar.classList.remove('has-buzz');
+  bar.querySelector('.bl').textContent='Esperando respuestas...';
+  document.getElementById('bzentries').innerHTML='';
+}
+
+function startTmr(){
+  tmrSec=20;const el=document.getElementById('qtmr');
+  el.classList.remove('urg');el.textContent=tmrSec+'s';
+  clearInterval(tmrInt);
+  tmrInt=setInterval(()=>{
+    tmrSec--;el.textContent=tmrSec+'s';
+    if(tmrSec<=5){el.classList.add('urg');sfxTick();}
+    if(tmrSec<=0){
+      clearInterval(tmrInt);el.textContent='⏰';
+      if(!S.firstBuzz){
+        resetBuzzBar();
+        document.getElementById('bzbar').querySelector('.bl').textContent='⏰ Tiempo agotado — nadie respondió';
+        document.getElementById('brv').disabled=false;
+        document.getElementById('bnx').disabled=false;
+        document.getElementById('bco').disabled=true;
+        document.getElementById('bwr').disabled=true;
+        pub('question_end',{result:'timeout'});
+        S.qActive=false;
+      }
+    }
+  },1000);
+}
+
+// Poll buzz
+setInterval(()=>{
+  if(!S.room||S.role!=='host'||!S.qActive)return;
+  try{const raw=localStorage.getItem(gk('buzz'));
+    if(raw){const b=JSON.parse(raw);if(b.ts>lastBuzzTs){lastBuzzTs=b.ts;onBuzz(b);}}}catch{}
+},120);
+
+function onBuzz(buzz){
+  if(!S.qActive)return;
+  const m=S.bracket.find(x=>x.id===S.activeMatch);
+  if(!m||!m.teams.includes(buzz.team))return;
+  // Record answer for this team
+  if(S.answers[buzz.team])return; // already answered
+  S.answers[buzz.team]=buzz.answerIdx;
+
+  const isFirst=!S.firstBuzz;
+  if(isFirst){S.firstBuzz=buzz.team;clearInterval(tmrInt);}
+
+  const isCorrect=buzz.answerIdx===S.curQ.c;
+  const LABS=['A','B','C','D'];
+
+  // Add entry to buzz bar
+  const entries=document.getElementById('bzentries');
+  const div=document.createElement('div');
+  div.className=`be ${isFirst?'first':''} ${isCorrect?'ans-ok':'ans-no'}`;
+  div.innerHTML=`<span class="bef">${T[buzz.team]?.f}</span><span class="ben">${buzz.team.toUpperCase()}</span><span class="bea">${LABS[buzz.answerIdx]} ${isCorrect?'✓ CORRECTO':'✗ INCORRECTO'}</span>`;
+  entries.appendChild(div);
+
+  document.getElementById('bzbar').classList.add('has-buzz');
+  document.getElementById('bzbar').querySelector('.bl').textContent='Respuestas recibidas:';
+
+  sfxBuzz();
+  toast(`${T[buzz.team]?.f} ${buzz.team} → Opción ${LABS[buzz.answerIdx]}`);
+
+  if(isFirst){
+    document.getElementById('bco').disabled=false;
+    document.getElementById('bwr').disabled=false;
+    document.getElementById('bsq').disabled=true;
+    document.getElementById('bnx').disabled=true;
+  }
+}
+
+function hCorrect(){
+  if(!S.firstBuzz||!S.activeMatch)return;
+  const m=S.bracket.find(x=>x.id===S.activeMatch);
+  const i=m.teams.indexOf(S.firstBuzz);m.score[i]++;
+  updHSB(m);
+  // Animate score
+  document.getElementById(i===0?'scA':'scB').classList.remove('scored');
+  void document.getElementById(i===0?'scA':'scB').offsetWidth;
+  document.getElementById(i===0?'scA':'scB').classList.add('scored');
+  renderBkt();
+  saveBracket();
+  const gk2=gk(`goals_${S.firstBuzz}`);
+  localStorage.setItem(gk2,(parseInt(localStorage.getItem(gk2)||0)+1));
+  // Highlight correct option
+  const LABS=['A','B','C','D'];
+  document.getElementById(`opt-host-${S.curQ.c}`)?.classList.add('correct-opt');
+  pub('goal',{team:S.firstBuzz,score:[...m.score],teams:m.teams,answer:S.curQ.opts[S.curQ.c],correctIdx:S.curQ.c});
+  pub('question_end',{result:'correct',team:S.firstBuzz,correctIdx:S.curQ.c});
+  sfxGol();showGoal(S.firstBuzz,S.curQ.opts[S.curQ.c]);
+  document.getElementById('bco').disabled=true;
+  document.getElementById('bwr').disabled=true;
+  document.getElementById('bnx').disabled=false;
+  checkOver(m);
+}
+
+function hWrong(){
+  if(!S.firstBuzz)return;
+  const LABS=['A','B','C','D'];
+  document.getElementById(`opt-host-${S.curQ.c}`)?.classList.add('correct-opt');
+  pub('question_end',{result:'wrong',team:S.firstBuzz,correctIdx:S.curQ.c});
+  sfxWrong();toast(`❌ Incorrecto — la respuesta era: ${S.curQ.opts[S.curQ.c]}`);
+  document.getElementById('bco').disabled=true;
+  document.getElementById('bwr').disabled=true;
+  document.getElementById('bnx').disabled=false;
+}
+
+function hReveal(){
+  document.getElementById('ansr').classList.add('show');
+  document.getElementById(`opt-host-${S.curQ.c}`)?.classList.add('correct-opt');
+  document.getElementById('brv').disabled=true;
+  sfxCorrect();
+}
+
+const GOALS_TO_WIN = 3;
+
+function hNext(){
+  S.qIdx++;
+  document.getElementById('qc').textContent=S.qIdx+1;
+  document.getElementById('qlb').textContent=`PREGUNTA ${S.qIdx+1}`;
+  resetBtns();S.firstBuzz=null;S.answers={};S.qActive=false;
+  resetBuzzBar();
+  document.getElementById('opts-host').innerHTML='';
+  document.getElementById('ansr').classList.remove('show');
+  document.getElementById('qtxt').textContent='Presiona "Iniciar Pregunta"';
+  document.getElementById('qtmr').textContent='—';
+  document.getElementById('qtmr').classList.remove('urg');
+}
+
+function checkOver(m){
+  // Primero en llegar a GOALS_TO_WIN goles gana — sin limite de preguntas
+  const w = m.score[0]>=GOALS_TO_WIN ? m.teams[0]
+           : m.score[1]>=GOALS_TO_WIN ? m.teams[1]
+           : null;
+  if(!w) return;
+  m.winner=w;advBkt(m);saveBracket();renderBkt();renderMBtns();
+  pub('match_winner',{team:w,matchId:m.id});
+  sfxWinner();launchConfetti();
+  setTimeout(()=>{showWin(w);document.getElementById('bnx').disabled=true;},1400);
+}
+
+function advBkt(m){
+  const w=m.winner;
+  if(m.id==='q1')S.bracket[4].teams[0]=w;
+  if(m.id==='q2')S.bracket[4].teams[1]=w;
+  if(m.id==='q3')S.bracket[5].teams[0]=w;
+  if(m.id==='q4')S.bracket[5].teams[1]=w;
+  if(m.id==='s1')S.bracket[6].teams[0]=w;
+  if(m.id==='s2')S.bracket[6].teams[1]=w;
+}
+
+function resetBtns(){
+  document.getElementById('bsq').disabled=false;
+  document.getElementById('bco').disabled=true;
+  document.getElementById('bwr').disabled=true;
+  document.getElementById('brv').disabled=true;
+  document.getElementById('bnx').disabled=true;
+}
+
+// ── LINKS ──
+function renderLinks(){
+  const base=`${location.origin}${location.pathname}`;
+  const hostUrl=`${base}?room=${S.room}&role=host`;
+  const playerUrl=`${base}?room=${S.room}`;
+
+  document.getElementById('qlinks').innerHTML=`
+    <div class="lc" style="flex:1;min-width:200px;border-color:rgba(245,194,0,.3);background:rgba(245,194,0,.06)">
+      <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:2px">🎙 Link Host</div>
+      <div class="lcurl">${hostUrl}</div>
+      <button class="lccp" onclick="cpLink('${hostUrl}',this)">📋 Copiar</button>
+    </div>
+    <div class="lc" style="flex:1;min-width:200px;border-color:rgba(37,168,82,.3);background:rgba(37,168,82,.06)">
+      <div style="font-size:10px;letter-spacing:2px;color:var(--gl);text-transform:uppercase;margin-bottom:2px">⚽ Link Jugadores</div>
+      <div class="lcurl">${playerUrl}</div>
+      <button class="lccp" onclick="cpLink('${playerUrl}',this)">📋 Copiar</button>
+    </div>`;
+
+  document.getElementById('lpan').innerHTML=Object.keys(T).map(t=>{
+    const url=`${base}?room=${S.room}&team=${encodeURIComponent(t)}`;
+    return`<div class="lc">
+      <div class="lcfl">${T[t].f}</div>
+      <div class="lcnm">${t.toUpperCase()}</div>
+      <div class="lcurl">${url}</div>
+      <button class="lccp" onclick="cpLink('${url}',this)">📋 Copiar</button>
+    </div>`;
+  }).join('');
+}
+function cpLink(url,btn){navigator.clipboard.writeText(url).then(()=>{btn.textContent='✓ Copiado!';setTimeout(()=>btn.textContent='📋 Copiar',2000)});}
+
+// ══════════════════════════════════════════
+// PLAYER
+// ══════════════════════════════════════════
+function renderPlayer(){
+  document.getElementById('pfl').textContent=T[S.team]?.f||'⚽';
+  document.getElementById('pcn').textContent=`${T[S.team]?.f||''} ${S.team.toUpperCase()}`;
+}
+
+function pQStart(d){
+  if(!d.teams.includes(S.team)){
+    showPanel('pbench');return;
+  }
+  document.getElementById('pqtxt').textContent=d.q;
+  const LABS=['A','B','C','D'];
+  document.getElementById('opts-player').innerHTML=d.opts.map((o,i)=>`
+    <button class="opt-btn" id="popt-${i}" onclick="pAnswer(${i})">
+      <span class="olbl">${LABS[i]}</span><span>${o}</span>
+    </button>`).join('');
+  showPanel('pact');
+}
+
+function pAnswer(idx){
+  // Disable all buttons
+  for(let i=0;i<4;i++){
+    const b=document.getElementById(`popt-${i}`);
+    if(b){b.disabled=true;}
+  }
+  document.getElementById(`popt-${idx}`)?.classList.add('selected');
+  sfxSelect();
+  const buzz={team:S.team,answerIdx:idx,ts:Date.now()};
+  localStorage.setItem(gk('buzz'),JSON.stringify(buzz));
+  pub('buzz',buzz);
+  // Show "waiting for result" state
+  document.getElementById(`popt-${idx}`).innerHTML=`<span class="olbl" style="color:var(--gold)">${['A','B','C','D'][idx]}</span><span>${document.getElementById(`popt-${idx}`).querySelector('span:last-child').textContent} ⏳</span>`;
+}
+
+function pQEnd(d){
+  const isCorrect=d.result==='correct'&&d.team===S.team;
+  const isWrong=d.result==='wrong'&&d.team===S.team;
+  const ci=d.correctIdx;
+
+  // Reveal correct/wrong on options if visible
+  for(let i=0;i<4;i++){
+    const b=document.getElementById(`popt-${i}`);
+    if(!b)continue;
+    b.disabled=true;
+    if(i===ci)b.classList.add('rev-ok');
+    else if(b.classList.contains('selected'))b.classList.add('rev-no');
+  }
+
+  setTimeout(()=>{
+    if(d.result==='timeout'){
+      showPanel('pwait');
+      document.getElementById('pminfo').textContent='';
+      return;
+    }
+    if(isCorrect){
+      document.getElementById('bri').textContent='⚽';
+      document.getElementById('brt').textContent='¡GOL!';
+      document.getElementById('brsub').textContent='Respuesta correcta 🎉';
+      sfxGol();launchConfetti();
+    } else if(isWrong){
+      document.getElementById('bri').textContent='❌';
+      document.getElementById('brt').textContent='INCORRECTO';
+      document.getElementById('brsub').textContent=`La respuesta era: ${d.correctIdx!==undefined?['A','B','C','D'][d.correctIdx]:'?'}`;
+      sfxWrong();
+    } else {
+      // Other team answered — show correct in options first, then go back to waiting
+      setTimeout(()=>showPanel('pwait'),2000);
+      return;
+    }
+    showPanel('pbzd');
+  },800);
+}
+
+function showPanel(id){
+  ['pwait','pact','pbzd','pbench'].forEach(x=>document.getElementById(x).style.display='none');
+  document.getElementById(id).style.display='block';
+}
+
+function updPGoals(){
+  if(!S.room||!S.team)return;
+  const g=parseInt(localStorage.getItem(gk(`goals_${S.team}`))||0);
+  document.getElementById('pg').textContent=g;
+}
+
+// ══════════════════════════════════════════
+// OVERLAYS
+// ══════════════════════════════════════════
+function showGoal(team,answer){
+  document.getElementById('gtnm').textContent=`${T[team]?.f||''} ${team.toUpperCase()}`;
+  document.getElementById('gans').textContent=answer?`✓ ${answer}`:'';
+  const ov=document.getElementById('gov');ov.classList.add('show');
+  setTimeout(()=>ov.classList.remove('show'),2800);
+}
+
+function showWin(team){
+  document.getElementById('wfl').textContent=T[team]?.f||'';
+  document.getElementById('wnm').textContent=`${T[team]?.f||''} ${team.toUpperCase()}`;
+  document.getElementById('wov').classList.add('show');
+  launchConfetti();sfxWinner();
+}
+
+function closeW(){document.getElementById('wov').classList.remove('show');}
+
+// ── TOAST ──
+function toast(msg){
+  const t=document.getElementById('tst');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTmr);toastTmr=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+window.addEventListener('load',()=>{
+  const p=new URLSearchParams(location.search);
+  const r=p.get('room'),t=p.get('team'),role=p.get('role');
+  if(r){document.getElementById('ri').value=r;document.getElementById('rip').value=r;}
+  if(t)document.getElementById('ts').value=t;
+  if(r&&role==='host')setTimeout(goHost,150);
+  else if(r&&t)setTimeout(goPlayer,150);
+});
+</script>
+</body>
+</html>
