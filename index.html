@@ -908,7 +908,7 @@ function startPoll(){
 window.addEventListener('storage',e=>{
   if(!S.room)return;
   if(e.key===gk('ev')){try{const ev=JSON.parse(e.newValue);if(ev&&ev.ts>lastEvTs){lastEvTs=ev.ts;handleEv(ev);}}catch{}}
-  if(e.key===gk('buzz')&&S.role==='host'){try{const b=JSON.parse(e.newValue);if(b&&b.ts>lastBuzzTs){lastBuzzTs=b.ts;onBuzz(b);}}catch{}}
+  if(e.key===gk('buzz')&&S.role==='host'){try{const b=JSON.parse(e.newValue);if(b&&b.ts>lastBuzzTs){onBuzz(b);}}catch{}}
 });
 
 function handleEv(ev){
@@ -1079,7 +1079,7 @@ function startTmr(){
 setInterval(()=>{
   if(!S.room||S.role!=='host'||!S.qActive)return;
   try{const raw=localStorage.getItem(gk('buzz'));
-    if(raw){const b=JSON.parse(raw);if(b.ts>lastBuzzTs){lastBuzzTs=b.ts;onBuzz(b);}}}catch{}
+    if(raw){const b=JSON.parse(raw);if(b.ts>lastBuzzTs){onBuzz(b);}}}catch{}
 },120);
 
 function onBuzz(buzz){
