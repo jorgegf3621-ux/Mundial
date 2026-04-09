@@ -60,6 +60,7 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
 .trophy-wrap{position:relative;display:inline-block;margin-bottom:10px}
 .trophy{font-size:80px;filter:drop-shadow(0 0 30px rgba(245,194,0,.7));animation:trophyBob 2.5s ease-in-out infinite}
 @keyframes trophyBob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+.worldcup-img{width:72px;height:auto;display:block;filter:drop-shadow(0 0 22px rgba(245,194,0,.55))}
 
 .title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,10vw,110px);letter-spacing:6px;line-height:.85;color:var(--w);text-shadow:0 4px 30px rgba(0,0,0,.5)}
 .title span{color:var(--gold);text-shadow:0 0 40px rgba(245,194,0,.5)}
@@ -337,14 +338,20 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
 <canvas id="confetti-canvas"></canvas>
 
 <!-- Music toggle -->
-<div class="music-toggle" id="musicBtn" onclick="toggleMusic()" title="Music">??</div>
+<div class="music-toggle" id="musicBtn" onclick="toggleMusic()" title="Music">OFF</div>
 
 <div id="ls" class="screen active">
   <div class="stadium-lights"></div>
-  <div class="trophy-wrap"><div class="trophy">??</div></div>
+  <div class="trophy-wrap">
+    <img
+      class="worldcup-img"
+      src="https://upload.wikimedia.org/wikipedia/commons/d/d3/FIFA_World_Cup_Trophy.svg"
+      alt="World Cup Trophy"
+    />
+  </div>
   <div class="title">MUNDIAL<br><span>2026</span></div>
   <div class="title-year"></div>
-  <div class="sub">Amalga Group &nbsp;?&nbsp; Team Wide Call</div>
+  <div class="sub">Amalga Group &nbsp;&middot;&nbsp; Team Wide Call</div>
   <div class="flags-row">
     <img src="https://flagcdn.com/w80/mx.png" style="height:28px;border-radius:3px">
     <img src="https://flagcdn.com/w80/br.png" style="height:28px;border-radius:3px">
@@ -494,7 +501,7 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
     </div>
     <div id="pbench" style="display:none">
       <div class="bench-notice">
-        <span class="bench-icon">??</span>
+        <span class="bench-icon">&#128719;</span>
         <div class="bench-txt">You are not playing this match</div>
         <div style="font-size:11px;color:var(--gray);margin-top:6px">Wait for your turn and cheer for your team</div>
       </div>
@@ -504,7 +511,7 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
 
 <div class="ov" id="gov">
   <div class="goal-ring">
-    <div class="gball">?</div>
+    <div class="gball">&#9917;</div>
     <div class="gtxt">GOAL!</div>
   </div>
   <div class="gtnm" id="gtnm"></div>
@@ -512,7 +519,7 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
 </div>
 
 <div class="ov" id="wov">
-  <div class="wcup">??</div>
+  <div class="wcup">&#127942;</div>
   <div class="wlb">Match Winner</div>
   <div class="wfl" id="wfl"></div>
   <div class="wnm" id="wnm"></div>
@@ -648,10 +655,10 @@ async function toggleMusic(){
   const btn=document.getElementById('musicBtn');
   if(musicOn){
     await startBGMusic();
-    btn.textContent='??';btn.classList.add('playing');
+    btn.textContent='ON';btn.classList.add('playing');
   }else{
     stopBGMusic();
-    btn.textContent='??';btn.classList.remove('playing');
+    btn.textContent='OFF';btn.classList.remove('playing');
   }
 }
 
