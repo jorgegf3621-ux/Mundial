@@ -479,6 +479,24 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
     </div>
   </div>
 
+  <!-- Live scoreboard for player -->
+  <div id="p-scoreboard" style="display:none;width:100%;max-width:480px;margin-bottom:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 18px">
+    <div style="font-size:9px;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-bottom:10px">Live Score</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <div style="text-align:center;flex:1">
+        <div id="p-fA" style="font-size:32px;margin-bottom:4px"></div>
+        <div id="p-cnA" style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;color:var(--w)"></div>
+        <div id="p-scA" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--gold);line-height:1">0</div>
+      </div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:rgba(255,255,255,.2)">VS</div>
+      <div style="text-align:center;flex:1">
+        <div id="p-fB" style="font-size:32px;margin-bottom:4px"></div>
+        <div id="p-cnB" style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;color:var(--w)"></div>
+        <div id="p-scB" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--gold);line-height:1">0</div>
+      </div>
+    </div>
+  </div>
+
   <div class="psb" id="psb">
     <div id="pwait">
       <div style="font-size:32px;margin-bottom:10px">?</div>
@@ -705,7 +723,8 @@ const flagImg=(team,size)=>{
   const[w,h]=size==='lg'?['w80','42px']:size==='md'?['w40','26px']:['w20','14px'];
   return`<img src="https://flagcdn.com/${w}/${cc}.png" style="height:${h};border-radius:3px;vertical-align:middle;display:inline-block">`;
 };
-const DIFFICULTY_ORDER=['easy','medium','hard'];
+// 80% easy, 20% medium — 1 medium every 5 questions, no hard
+const DIFFICULTY_ORDER=['easy','easy','easy','easy','medium'];
 
 const BRACKET=[
   {id:'q1',round:'Quarterfinals',label:'Quarterfinal A',teams:['Mexico','Brazil'],score:[0,0],winner:null},
@@ -786,7 +805,10 @@ function setupBC(){
   _ch.on('broadcast',{event:'question_start'},({payload})=>{if(S.role==='player')pQStart(payload);})
      .on('broadcast',{event:'question_end'},({payload})=>{if(S.role==='player')pQEnd(payload);})
      .on('broadcast',{event:'goal'},({payload})=>{
-       if(S.role==='player'&&payload.team===S.team){S.myGoals=(S.myGoals||0)+1;updPGoals();}
+       if(S.role==='player'){
+         if(payload.team===S.team){S.myGoals=(S.myGoals||0)+1;updPGoals();}
+         updPScoreboard(payload.teams,payload.score);
+       }
        showGoal(payload.team,payload.answer);
      })
      .on('broadcast',{event:'match_winner'},({payload})=>{if(S.role!=='host')showWin(payload.team);})
@@ -921,7 +943,7 @@ function hStartQ(){
   document.getElementById('brv').disabled=false;
   document.getElementById('bnx').disabled=true;
 
-  pub('question_start',{q:q.q,opts:q.opts,teams:m.teams,matchId:m.id,difficulty:q.difficulty});
+  pub('question_start',{q:q.q,opts:q.opts,teams:m.teams,score:m.score,matchId:m.id,difficulty:q.difficulty});
   startTmr();
 }
 
@@ -1105,7 +1127,20 @@ function renderPlayer(){
   document.getElementById('pcn').innerHTML=`${flagImg(S.team,'sm')} ${S.team.toUpperCase()}`;
 }
 
+function updPScoreboard(teams,score){
+  if(!teams||!teams[0])return;
+  const sb=document.getElementById('p-scoreboard');
+  sb.style.display='block';
+  document.getElementById('p-fA').innerHTML=flagImg(teams[0],'md');
+  document.getElementById('p-cnA').innerHTML=teams[0].toUpperCase();
+  document.getElementById('p-scA').textContent=score?score[0]:0;
+  document.getElementById('p-fB').innerHTML=flagImg(teams[1],'md');
+  document.getElementById('p-cnB').innerHTML=teams[1].toUpperCase();
+  document.getElementById('p-scB').textContent=score?score[1]:0;
+}
+
 function pQStart(d){
+  updPScoreboard(d.teams,d.score);
   if(!d.teams.includes(S.team)){
     showPanel('pbench');return;
   }
