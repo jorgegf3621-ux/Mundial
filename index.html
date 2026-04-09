@@ -570,98 +570,18 @@ function ensureTrackAudio(){
   });
 }
 
-// Vuvuzela-ish crowd hum + rhythmic beat fallback
-function startSynthBGMusic(){
-  bgGainNode=AC.createGain();bgGainNode.gain.value=0.18;
-  bgGainNode.connect(AC.destination);
-
-  // Crowd noise (filtered white noise)
-  const bufSize=AC.sampleRate*2;
-  const buf=AC.createBuffer(1,bufSize,AC.sampleRate);
-  const d=buf.getChannelData(0);
-  for(let i=0;i<bufSize;i++)d[i]=(Math.random()*2-1)*0.4;
-  const src=AC.createBufferSource();src.buffer=buf;src.loop=true;
-  const filt=AC.createBiquadFilter();filt.type='bandpass';filt.frequency.value=400;filt.Q.value=0.5;
-  src.connect(filt);filt.connect(bgGainNode);
-  src.start();
-
-  // Rhythmic kick drum pattern
-  function kick(){
-    const o=AC.createOscillator(),g=AC.createGain(),g2=AC.createGain();
-    o.connect(g);g.connect(g2);g2.connect(AC.destination);
-    g2.gain.value=0.25;
-    o.frequency.setValueAtTime(150,AC.currentTime);
-    o.frequency.exponentialRampToValueAtTime(40,AC.currentTime+0.15);
-    g.gain.setValueAtTime(1,AC.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.25);
-    o.start(AC.currentTime);o.stop(AC.currentTime+0.3);
-  }
-  function snare(){
-    const bufS=AC.sampleRate*0.1;
-    const b=AC.createBuffer(1,bufS,AC.sampleRate);
-    const dd=b.getChannelData(0);
-    for(let i=0;i<bufS;i++)dd[i]=(Math.random()*2-1);
-    const s=AC.createBufferSource();s.buffer=b;
-    const f=AC.createBiquadFilter();f.type='highpass';f.frequency.value=2000;
-    const g=AC.createGain();g.gain.value=0.12;
-    s.connect(f);f.connect(g);g.connect(AC.destination);
-    s.start();s.stop(AC.currentTime+0.1);
-  }
-
-  // BPM ~120 pattern
-  let beat=0;
-  window._beatInt=setInterval(()=>{
-    if(!bgPlaying||usingTrackAudio)return;
-    if(beat%4===0||beat%4===2)kick();
-    if(beat%4===2)setTimeout(snare,100);
-    // Hi-hat
-    playTone(8000,0.05,'square',0.04);
-    beat++;
-  },250);
-
-  // Melody — simple fanfare loop
-  const melody=[523,659,784,1047,784,659,523,0,392,523,659,523,0,0];
-  let mi=0;
-  window._melInt=setInterval(()=>{
-    if(!bgPlaying||usingTrackAudio)return;
-    const f=melody[mi%melody.length];
-    if(f>0)playTone(f,0.18,'triangle',0.08);
-    mi++;
-  },300);
-}
-
-function stopSynthBGMusic(){
-  if(bgGainNode){bgGainNode.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.5);}
-  clearInterval(window._beatInt);clearInterval(window._melInt);
-  bgGainNode=null;
-}
 
 async function startBGMusic(){
   if(bgPlaying)return;
   bgPlaying=true;
   ensureTrackAudio();
-  try{
-    // Preload check
-    bgAudio.load();
-    await new Promise((res,rej)=>{bgAudio.oncanplaythrough=res;bgAudio.onerror=()=>rej(new Error('Failed to load MP3'));setTimeout(rej,8000,new Error('Load timeout'));});
-    await bgAudio.play();
-    usingTrackAudio=true;
-    console.log('♪ Playing custom track:',SONG_TRACK_URL);
-  }catch(e){
-    console.warn('♪ Track failed, using synth fallback:',e.message);
-    usingTrackAudio=false;
-    startSynthBGMusic();
-  }
+  bgAudio.load();
+  bgAudio.play().catch(e=>console.warn('Audio play failed:',e));
 }
 
 function stopBGMusic(){
   bgPlaying=false;
-  if(bgAudio){
-    bgAudio.pause();
-    bgAudio.currentTime=0;
-  }
-  usingTrackAudio=false;
-  stopSynthBGMusic();
+  if(bgAudio){bgAudio.pause();bgAudio.currentTime=0;}
 }
 
 async function toggleMusic(){
