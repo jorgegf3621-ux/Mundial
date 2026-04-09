@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mundial 2026 Quiz — Amalga</title>
+<title>Mundial 2026 - Amalga</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -63,10 +63,7 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
 
 .title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,10vw,110px);letter-spacing:6px;line-height:.85;color:var(--w);text-shadow:0 4px 30px rgba(0,0,0,.5)}
 .title span{color:var(--gold);text-shadow:0 0 40px rgba(245,194,0,.5)}
-.title-year{
-  font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,56px);
-  letter-spacing:12px;color:rgba(255,255,255,.25);margin-top:4px;
-}
+.title-year{display:none}
 .sub{font-size:12px;letter-spacing:4px;color:var(--gray);text-transform:uppercase;margin:12px 0 28px}
 
 .flags-row{font-size:28px;letter-spacing:8px;margin-bottom:28px;animation:fadeIn .8s ease-out .3s both}
@@ -340,15 +337,14 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
 <canvas id="confetti-canvas"></canvas>
 
 <!-- Music toggle -->
-<div class="music-toggle" id="musicBtn" onclick="toggleMusic()" title="Música">🔇</div>
+<div class="music-toggle" id="musicBtn" onclick="toggleMusic()" title="Music">??</div>
 
-<!-- ═══════════ LANDING ═══════════ -->
 <div id="ls" class="screen active">
   <div class="stadium-lights"></div>
-  <div class="trophy-wrap"><div class="trophy">🏆</div></div>
+  <div class="trophy-wrap"><div class="trophy">??</div></div>
   <div class="title">MUNDIAL<br><span>2026</span></div>
-  <div class="title-year">QUIZ</div>
-  <div class="sub">Amalga Group &nbsp;·&nbsp; Team Wide Call</div>
+  <div class="title-year"></div>
+  <div class="sub">Amalga Group &nbsp;?&nbsp; Team Wide Call</div>
   <div class="flags-row">
     <img src="https://flagcdn.com/w80/mx.png" style="height:28px;border-radius:3px">
     <img src="https://flagcdn.com/w80/br.png" style="height:28px;border-radius:3px">
@@ -360,188 +356,182 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
     <img src="https://flagcdn.com/w80/us.png" style="height:28px;border-radius:3px">
   </div>
   <div class="card">
-    <h2>¿Cómo entras?</h2>
-    <!-- HOST -->
+    <h2>How do you join?</h2>
     <div class="fg">
-      <label>Room ID (host lo define)</label>
-      <input id="ri" type="text" placeholder="ej: amalga2026" maxlength="20"/>
+      <label>Room ID (set by the host)</label>
+      <input id="ri" type="text" placeholder="e.g. amalga2026" maxlength="20"/>
     </div>
-    <button class="btn btn-gold w100" style="margin-bottom:10px" onclick="goHost()">🎙 Entrar como HOST</button>
-    <div class="divider">o</div>
-    <!-- JUGADOR -->
+    <button class="btn btn-gold w100" style="margin-bottom:10px" onclick="goHost()">Host View</button>
+    <div class="divider">or</div>
     <div style="display:flex;gap:10px">
       <div class="fg" style="flex:2">
-        <label>Tu nombre</label>
-        <input id="pname" type="text" placeholder="Ej: Jorge" maxlength="20"/>
+        <label>Your name</label>
+        <input id="pname" type="text" placeholder="E.g. Jorge" maxlength="20"/>
       </div>
       <div class="fg" style="flex:1">
-        <label># Jugador</label>
+        <label>Player #</label>
         <input id="pnum" type="number" placeholder="10" min="1" max="99" style="text-align:center"/>
       </div>
     </div>
     <div class="fg">
-      <label>Tu equipo / país</label>
+      <label>Your team / country</label>
       <select id="ts">
-        <option value="">— Elige tu selección —</option>
-        <option value="Mexico">🇲🇽 México</option>
-        <option value="Brasil">🇧🇷 Brasil</option>
-        <option value="España">🇪🇸 España</option>
-        <option value="Argentina">🇦🇷 Argentina</option>
-        <option value="Francia">🇫🇷 Francia</option>
-        <option value="Alemania">🇩🇪 Alemania</option>
-        <option value="Portugal">🇵🇹 Portugal</option>
-        <option value="Estados Unidos">🇺🇸 Estados Unidos</option>
+        <option value="">- Choose your team -</option>
+        <option value="Mexico">Mexico</option>
+        <option value="Brazil">Brazil</option>
+        <option value="Spain">Spain</option>
+        <option value="Argentina">Argentina</option>
+        <option value="France">France</option>
+        <option value="Germany">Germany</option>
+        <option value="Portugal">Portugal</option>
+        <option value="United States">United States</option>
       </select>
     </div>
     <div class="fg">
-      <label>Room ID del host <span style="color:var(--red)">*</span></label>
-      <input id="rip" type="text" placeholder="Pide el Room ID al host" maxlength="20"/>
+      <label>Host Room ID <span style="color:var(--red)">*</span></label>
+      <input id="rip" type="text" placeholder="Ask the host for the Room ID" maxlength="20"/>
     </div>
-    <button class="btn btn-green w100" onclick="goPlayer()">⚽ Entrar como Jugador</button>
+    <button class="btn btn-green w100" onclick="goPlayer()">Player View</button>
   </div>
 </div>
 
-<!-- ═══════════ HOST ═══════════ -->
 <div id="hs" class="screen">
   <div class="hh">
-    <button class="btn btn-ghost back-btn" onclick="goBack()" style="position:absolute;left:16px;top:16px;font-size:12px;padding:8px 14px;display:flex;align-items:center;gap:6px;">&#8592; Salir</button>
-    <button class="btn btn-gold" onclick="openSorteo()" style="position:absolute;left:90px;top:16px;font-size:11px;padding:8px 14px;">🎲 Sortear Equipos</button>
-    <button class="btn btn-red" onclick="resetAll()" style="position:absolute;right:16px;top:16px;font-size:11px;padding:8px 14px;">&#x21BA; Reset</button>
-    <h1>🏆 MUNDIAL 2026 QUIZ</h1>
-    <p>HOST &nbsp;·&nbsp; <span class="ping"><span class="pd"></span>EN VIVO</span> &nbsp;·&nbsp; Room: <strong id="rlb" style="color:var(--gold)"></strong></p>
+    <button class="btn btn-ghost back-btn" onclick="goBack()" style="position:absolute;left:16px;top:16px;font-size:12px;padding:8px 14px;display:flex;align-items:center;gap:6px;">&#8592; Exit</button>
+    <button class="btn btn-gold" onclick="openSorteo()" style="position:absolute;left:90px;top:16px;font-size:11px;padding:8px 14px;">Team Draw</button>
+    <button class="btn btn-red" onclick="resetAll()" style="position:absolute;right:16px;top:16px;font-size:11px;padding:8px 14px;">Reset</button>
+    <h1>MUNDIAL 2026</h1>
+    <p>HOST &nbsp;?&nbsp; <span class="ping"><span class="pd"></span>LIVE</span> &nbsp;?&nbsp; Room: <strong id="rlb" style="color:var(--gold)"></strong></p>
   </div>
 
   <div class="bracket-scroll"><div class="bracket" id="bkt"></div></div>
 
   <div class="ms-wrap">
-    <h3>Seleccionar Partido</h3>
+    <h3>Select Match</h3>
     <div class="ms-btns" id="mbtns"></div>
   </div>
 
   <div class="ga" id="ga" style="display:none">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
       <div>
-        <span class="rbdg" id="rbdg">Cuartos</span>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--gray)" id="mtl">Partido</div>
+        <span class="rbdg" id="rbdg">Quarterfinals</span>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--gray)" id="mtl">Match</div>
       </div>
-      <div style="font-size:10px;color:var(--gray);letter-spacing:1px">Pregunta <span id="qc">1</span> &nbsp;·&nbsp; <span style="color:var(--gold)">🏆 Primero en 3 goles</span></div>
+      <div style="font-size:10px;color:var(--gray);letter-spacing:1px">Question <span id="qc">1</span> &nbsp;?&nbsp; <span style="color:var(--gold)">First to 3 goals</span></div>
     </div>
 
     <div class="gsb">
       <div class="st">
-        <div class="sn">EQUIPO A</div>
-        <div class="sf" id="fA">🏳️</div>
-        <div class="sc" id="cnA">—</div>
+        <div class="sn">TEAM A</div>
+        <div class="sf" id="fA">?</div>
+        <div class="sc" id="cnA">-</div>
         <div class="sp" id="scA">0</div>
       </div>
-      <div class="svs">VS<small>META: 3 ⚽</small></div>
+      <div class="svs">VS<small>TARGET: 3</small></div>
       <div class="st">
-        <div class="sn">EQUIPO B</div>
-        <div class="sf" id="fB">🏳️</div>
-        <div class="sc" id="cnB">—</div>
+        <div class="sn">TEAM B</div>
+        <div class="sf" id="fB">?</div>
+        <div class="sc" id="cnB">-</div>
         <div class="sp" id="scB">0</div>
       </div>
     </div>
 
     <div class="qmeta">
-      <span class="qnum" id="qlb">PREGUNTA 1</span>
-      <span class="qtimer" id="qtmr">—</span>
+      <span class="qnum" id="qlb">QUESTION 1</span>
+      <span class="qtimer" id="qtmr">-</span>
     </div>
-    <div class="qtext" id="qtxt">Selecciona un partido y presiona Iniciar</div>
+    <div class="qtext" id="qtxt">Select a match and press Start Question</div>
     <div class="opts-host" id="opts-host"></div>
 
     <div class="buzz-section" id="bzbar">
-      <div class="bl">Esperando respuestas...</div>
+      <div class="bl">Waiting for answers...</div>
       <div class="buzz-entries" id="bzentries"></div>
     </div>
-    <div class="ansr" id="ansr">✅ Respuesta correcta: <span id="ansrtxt"></span></div>
+    <div class="ansr" id="ansr">Correct answer: <span id="ansrtxt"></span></div>
 
     <div class="hctrl">
-      <button class="btn btn-gold" id="bsq" onclick="hStartQ()">▶ Iniciar Pregunta</button>
-      <button class="btn btn-green" id="bco" onclick="hCorrect()" disabled>✓ Correcto → Gol</button>
-      <button class="btn btn-red" id="bwr" onclick="hWrong()" disabled>✗ Incorrecto</button>
-      <button class="btn btn-ghost" id="brv" onclick="hReveal()" disabled>👁 Respuesta</button>
-      <button class="btn btn-ghost" id="bnx" onclick="hNext()" disabled>Siguiente →</button>
+      <button class="btn btn-gold" id="bsq" onclick="hStartQ()">Start Question</button>
+      <button class="btn btn-green" id="bco" onclick="hCorrect()" disabled>Correct -> Goal</button>
+      <button class="btn btn-red" id="bwr" onclick="hWrong()" disabled>Wrong</button>
+      <button class="btn btn-ghost" id="brv" onclick="hReveal()" disabled>Reveal Answer</button>
+      <button class="btn btn-ghost" id="bnx" onclick="hNext()" disabled>Next -></button>
     </div>
   </div>
 
   <div style="width:100%;max-width:860px;margin-bottom:8px">
-    <div style="font-size:10px;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-bottom:8px">🔗 Links por equipo — comparte con cada team</div>
+    <div style="font-size:10px;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-bottom:8px">Team links - share one with each team</div>
     <div class="lpan" id="lpan"></div>
   </div>
 </div>
 
-<!-- ═══════════ PLAYER ═══════════ -->
 <div id="ps" class="screen">
-  <button class="btn btn-ghost back-btn" onclick="goBack()" style="position:absolute;left:16px;top:16px;font-size:12px;padding:8px 14px;z-index:10;display:flex;align-items:center;gap:6px;">&#8592; Salir</button>
+  <button class="btn btn-ghost back-btn" onclick="goBack()" style="position:absolute;left:16px;top:16px;font-size:12px;padding:8px 14px;z-index:10;display:flex;align-items:center;gap:6px;">&#8592; Exit</button>
   <div class="player-header">
-    <div class="pfl" id="pfl">⚽</div>
+    <div class="pfl" id="pfl">?</div>
     <div class="pinfo">
       <div class="pcn" id="pcn">...</div>
-      <div class="prl"><span class="ping"><span class="pd"></span>Conectado</span></div>
-      <div class="psc">Goles: <span id="pg">0</span></div>
+      <div class="prl"><span class="ping"><span class="pd"></span>Connected</span></div>
+      <div class="psc">Goals: <span id="pg">0</span></div>
     </div>
   </div>
 
   <div class="psb" id="psb">
-    <!-- Waiting -->
     <div id="pwait">
-      <div style="font-size:32px;margin-bottom:10px">⏳</div>
-      <div class="wmsg">Esperando al host<span class="wdot">...</span></div>
+      <div style="font-size:32px;margin-bottom:10px">?</div>
+      <div class="wmsg">Waiting for the host<span class="wdot">...</span></div>
       <div id="pminfo"></div>
     </div>
-    <!-- Active question -->
     <div id="pact" style="display:none">
-      <div class="pqt" id="pqtxt">—</div>
+      <div class="pqt" id="pqtxt">-</div>
       <div class="opts-player" id="opts-player"></div>
     </div>
-    <!-- Result -->
     <div id="pbzd" style="display:none">
       <div class="pstatus">
-        <span class="ps-icon" id="bri">⚡</span>
-        <div class="ps-txt" id="brt">—</div>
+        <span class="ps-icon" id="bri">?</span>
+        <div class="ps-txt" id="brt">-</div>
         <div class="ps-sub" id="brsub"></div>
       </div>
     </div>
-    <!-- Bench (not in this match) -->
     <div id="pbench" style="display:none">
       <div class="bench-notice">
-        <span class="bench-icon">🪑</span>
-        <div class="bench-txt">No juegas este partido</div>
-        <div style="font-size:11px;color:var(--gray);margin-top:6px">Espera tu turno y anima a tu equipo</div>
+        <span class="bench-icon">??</span>
+        <div class="bench-txt">You are not playing this match</div>
+        <div style="font-size:11px;color:var(--gray);margin-top:6px">Wait for your turn and cheer for your team</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- GOAL OVERLAY -->
 <div class="ov" id="gov">
   <div class="goal-ring">
-    <div class="gball">⚽</div>
-    <div class="gtxt">GOL!</div>
+    <div class="gball">?</div>
+    <div class="gtxt">GOAL!</div>
   </div>
   <div class="gtnm" id="gtnm"></div>
   <div class="gans" id="gans"></div>
 </div>
 
-<!-- WINNER OVERLAY -->
 <div class="ov" id="wov">
-  <div class="wcup">🏆</div>
-  <div class="wlb">¡Campeón del Partido!</div>
+  <div class="wcup">??</div>
+  <div class="wlb">Match Winner</div>
   <div class="wfl" id="wfl"></div>
   <div class="wnm" id="wnm"></div>
-  <div class="wsub">AVANZA A LA SIGUIENTE RONDA</div>
-  <button class="btn btn-gold" style="margin-top:18px" onclick="closeW()">Continuar →</button>
+  <div class="wsub">ADVANCES TO THE NEXT ROUND</div>
+  <button class="btn btn-gold" style="margin-top:18px" onclick="closeW()">Continue -></button>
 </div>
 
 <div class="toast" id="tst"></div>
 
+<script src="questions.js"></script>
 <script>
 // ══════════════════════════════════════════
 // AUDIO ENGINE (Web Audio API — no server needed)
 // ══════════════════════════════════════════
 const AC = new (window.AudioContext || window.webkitAudioContext)();
 let bgGainNode = null, bgPlaying = false, musicOn = false;
+const SONG_TRACK_URL = 'assets/bg-song.mp3';
+let bgAudio = null;
+let usingTrackAudio = false;
 
 function unlockAudio(){if(AC.state==='suspended')AC.resume();}
 
@@ -555,10 +545,16 @@ function playTone(freq,dur,type='sine',vol=0.3,delay=0){
   o.start(AC.currentTime+delay);o.stop(AC.currentTime+delay+dur+0.05);
 }
 
-// Vuvuzela-ish crowd hum + rhythmic beat
-function startBGMusic(){
-  if(bgPlaying)return;
-  bgPlaying=true;
+function ensureTrackAudio(){
+  if(bgAudio)return;
+  bgAudio=new Audio(SONG_TRACK_URL);
+  bgAudio.loop=true;
+  bgAudio.preload='auto';
+  bgAudio.volume=0.35;
+}
+
+// Vuvuzela-ish crowd hum + rhythmic beat fallback
+function startSynthBGMusic(){
   bgGainNode=AC.createGain();bgGainNode.gain.value=0.18;
   bgGainNode.connect(AC.destination);
 
@@ -598,7 +594,7 @@ function startBGMusic(){
   // BPM ~120 pattern
   let beat=0;
   window._beatInt=setInterval(()=>{
-    if(!bgPlaying)return;
+    if(!bgPlaying||usingTrackAudio)return;
     if(beat%4===0||beat%4===2)kick();
     if(beat%4===2)setTimeout(snare,100);
     // Hi-hat
@@ -610,26 +606,53 @@ function startBGMusic(){
   const melody=[523,659,784,1047,784,659,523,0,392,523,659,523,0,0];
   let mi=0;
   window._melInt=setInterval(()=>{
-    if(!bgPlaying)return;
+    if(!bgPlaying||usingTrackAudio)return;
     const f=melody[mi%melody.length];
     if(f>0)playTone(f,0.18,'triangle',0.08);
     mi++;
   },300);
 }
 
-function stopBGMusic(){
-  bgPlaying=false;
+function stopSynthBGMusic(){
   if(bgGainNode){bgGainNode.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.5);}
   clearInterval(window._beatInt);clearInterval(window._melInt);
   bgGainNode=null;
 }
 
-function toggleMusic(){
+async function startBGMusic(){
+  if(bgPlaying)return;
+  bgPlaying=true;
+  ensureTrackAudio();
+  try{
+    await bgAudio.play();
+    usingTrackAudio=true;
+  }catch{
+    usingTrackAudio=false;
+    startSynthBGMusic();
+  }
+}
+
+function stopBGMusic(){
+  bgPlaying=false;
+  if(bgAudio){
+    bgAudio.pause();
+    bgAudio.currentTime=0;
+  }
+  usingTrackAudio=false;
+  stopSynthBGMusic();
+}
+
+async function toggleMusic(){
   unlockAudio();
   musicOn=!musicOn;
   const btn=document.getElementById('musicBtn');
-  if(musicOn){startBGMusic();btn.textContent='🔊';btn.classList.add('playing');}
-  else{stopBGMusic();btn.textContent='🔇';btn.classList.remove('playing');}
+  if(musicOn){
+    await startBGMusic();
+    btn.textContent='??';btn.classList.add('playing');
+  }else{
+    stopBGMusic();
+    btn.textContent='??';btn.classList.remove('playing');
+  }
 }
 
 // SFX
@@ -724,117 +747,37 @@ function initFloaters(){
     wrap.appendChild(el);
   }
 }
-initFloaters();
+// Disabled to keep the left side clean.
+// initFloaters();
 
 // ══════════════════════════════════════════
 // DATA
 // ══════════════════════════════════════════
 const T={
-  Mexico:{f:'🇲🇽',cc:'mx'},Brasil:{f:'🇧🇷',cc:'br'},España:{f:'🇪🇸',cc:'es'},Argentina:{f:'🇦🇷',cc:'ar'},
-  Francia:{f:'🇫🇷',cc:'fr'},Alemania:{f:'🇩🇪',cc:'de'},Portugal:{f:'🇵🇹',cc:'pt'},'Estados Unidos':{f:'🇺🇸',cc:'us'}
+  Mexico:{f:'MX',cc:'mx'},Brazil:{f:'BR',cc:'br'},Spain:{f:'ES',cc:'es'},Argentina:{f:'AR',cc:'ar'},
+  France:{f:'FR',cc:'fr'},Germany:{f:'DE',cc:'de'},Portugal:{f:'PT',cc:'pt'},'United States':{f:'US',cc:'us'}
 };
 const flagImg=(team,size)=>{
-  const cc=T[team]?.cc;if(!cc)return '·';
+  const cc=T[team]?.cc;if(!cc)return '?';
   const[w,h]=size==='lg'?['w80','42px']:size==='md'?['w40','26px']:['w20','14px'];
   return`<img src="https://flagcdn.com/${w}/${cc}.png" style="height:${h};border-radius:3px;vertical-align:middle;display:inline-block">`;
 };
-
-// Questions with 4 options. correctIndex = index of correct answer (0-based)
-const QS=[
-  // ── MUNDIAL 2026 ──
-  {q:"¿En qué estadio se jugará el partido inaugural del Mundial 2026?",opts:["Estadio Azteca","Estadio BBVA","Estadio Akron","MetLife Stadium"],c:0},
-  {q:"¿Cuántos equipos participarán en el Mundial 2026?",opts:["32 equipos","40 equipos","48 equipos","64 equipos"],c:2},
-  {q:"¿En qué tres países se celebra el Mundial 2026?",opts:["México, Brasil y Argentina","México, EU y Canadá","EU, Canadá y Colombia","México, EU y España"],c:1},
-  {q:"¿En qué fecha arranca el Mundial 2026?",opts:["1 de junio","11 de junio","20 de junio","5 julio"],c:1},
-  {q:"¿Cuántas veces ha organizado México el Mundial contando 2026?",opts:["1 vez","2 veces","3 veces","4 veces"],c:2},
-  {q:"¿En qué grupo quedó México en el sorteo del Mundial 2026?",opts:["Grupo B","Grupo C","Grupo D","Grupo A"],c:3},
-  {q:"¿Cuál es el primer rival de México en la fase de grupos?",opts:["Corea del Sur","Francia","Sudáfrica","Alemania"],c:2},
-  {q:"¿Dónde se jugará la Final del Mundial 2026?",opts:["Estadio Azteca","Wembley","MetLife Stadium NY/NJ","Hard Rock Stadium"],c:2},
-  {q:"¿Cuántos partidos en total se disputarán en el Mundial 2026?",opts:["64 partidos","80 partidos","96 partidos","104 partidos"],c:3},
-  {q:"¿Cuáles son las 3 ciudades mexicanas sede del Mundial 2026?",opts:["CDMX, Monterrey y Tijuana","CDMX, GDL y Monterrey","GDL, Monterrey y Puebla","CDMX, GDL y Cancún"],c:1},
-  {q:"¿Cuántos partidos albergará el Estadio Azteca en el Mundial 2026?",opts:["3 partidos","4 partidos","5 partidos","6 partidos"],c:2},
-  {q:"¿Qué récord histórico tendrá el Estadio Azteca en 2026?",opts:["Estadio más grande del mundo","Primer estadio en organizar 3 Mundiales","Estadio con más goles en Mundiales","Estadio más antiguo en un Mundial"],c:1},
-  {q:"¿Cuál es el segundo rival de México en la fase de grupos del Mundial 2026?",opts:["Japón","Francia","Corea del Sur","Portugal"],c:2},
-  {q:"¿Cuántos grupos habrá en el Mundial 2026?",opts:["8 grupos","10 grupos","12 grupos","16 grupos"],c:2},
-  {q:"¿Cuándo es la final del Mundial 2026?",opts:["5 julio 2026","12 julio 2026","19 julio 2026","26 julio 2026"],c:2},
-  {q:"¿En qué estadio de Monterrey se juega el Repechaje Intercontinental 2026?",opts:["Estadio Universitario","Estadio BBVA","Estadio Tecnológico","Estadio Olímpico"],c:1},
-  {q:"¿Cuántos partidos de grupo jugará México en suelo mexicano?",opts:["1 partido","2 partidos","Solo la final si clasifica","Los 3 partidos de grupo"],c:3},
-  {q:"¿Cuántos equipos europeos clasifican directamente al Mundial 2026?",opts:["12 equipos","14 equipos","16 equipos","18 equipos"],c:2},
-  {q:"¿Cuántos equipos de CONMEBOL (Sudamérica) clasifican al Mundial 2026?",opts:["4 equipos","6 equipos","8 equipos","10 equipos"],c:1},
-  {q:"¿Qué selección es la cabeza del Grupo A en el Mundial 2026?",opts:["Estados Unidos","Brasil","México","Argentina"],c:2},
-  {q:"¿En qué año fue el primer Mundial organizado por México?",opts:["1966","1970","1978","1982"],c:1},
-  {q:"¿Cuál fue el resultado del sorteo del Mundial 2026 en cuanto a grupos?",opts:["8 grupos de 6","10 grupos de 4","12 grupos de 4","16 grupos de 3"],c:2},
-  {q:"¿Qué país organiza el Mundial 2026 por primera vez?",opts:["México","Estados Unidos","Canadá","Brasil"],c:2},
-  {q:"¿Cuántos estadios hay en México para el Mundial 2026?",opts:["1 estadio","2 estadios","3 estadios","4 estadios"],c:2},
-  {q:"¿Cuántos estadios hay en Estados Unidos para el Mundial 2026?",opts:["8 estadios","9 estadios","11 estadios","13 estadios"],c:2},
-  {q:"¿Dónde se realizó el sorteo del Mundial 2026?",opts:["Nueva York","Washington D.C.","Los Ángeles","Miami"],c:1},
-  {q:"¿En qué mes termina el Mundial 2026?",opts:["Junio","Julio","Agosto","Septiembre"],c:1},
-  {q:"¿Cuántos partidos más que Qatar 2022 habrá en el Mundial 2026?",opts:["20 partidos más","40 partidos más","44 partidos más","32 partidos más"],c:1},
-  {q:"¿En qué estadio de Guadalajara se jugará el Mundial 2026?",opts:["Estadio Chivas","Estadio Jalisco","Estadio Akron","Estadio Atlas"],c:2},
-  {q:"¿Cuántos equipos de África clasifican al Mundial 2026?",opts:["5 equipos","7 equipos","9 equipos","11 equipos"],c:2},
-  // ── HISTORIA DEL FÚTBOL ──
-  {q:"¿Quién ganó el Mundial Qatar 2022?",opts:["Francia","Brasil","Argentina","Alemania"],c:2},
-  {q:"¿Quién marcó el último penal de la Final de Qatar 2022 para Argentina?",opts:["Mbappé","Messi","Di María","Gonzalo Montiel"],c:3},
-  {q:"¿Cuántos goles marcó Kylian Mbappé en la Final de Qatar 2022?",opts:["1 gol","2 goles","3 goles","4 goles"],c:2},
-  {q:"¿En qué país se celebró el primer Mundial de fútbol?",opts:["Brasil","Argentina","Uruguay","Chile"],c:2},
-  {q:"¿En qué año fue el primer Mundial de fútbol?",opts:["1924","1930","1934","1938"],c:1},
-  {q:"¿Cuántos Mundiales ha ganado Brasil?",opts:["3","4","5","6"],c:2},
-  {q:"¿Quién es el máximo goleador en la historia de los Mundiales?",opts:["Pelé","Ronaldo (Brasil)","Miroslav Klose","Messi"],c:2},
-  {q:"¿Cuántos goles tiene Miroslav Klose en Mundiales?",opts:["14 goles","16 goles","18 goles","20 goles"],c:1},
-  {q:"¿Cuál es el único jugador con dos Mundiales ganados como capitán?",opts:["Pelé","Diego Maradona","Didier Deschamps","Lionel Messi"],c:3},
-  {q:"¿En qué año ganó Francia su primer Mundial?",opts:["1994","1998","2002","2006"],c:1},
-  {q:"¿Cuántos goles marcó Eusébio en el Mundial de 1966?",opts:["6 goles","7 goles","9 goles","11 goles"],c:2},
-  {q:"¿En qué año le ganó México a Alemania en el Mundial de Rusia?",opts:["2010","2014","2018","2022"],c:2},
-  {q:"¿Cuántas veces ha llegado México al 'Quinto Partido' en un Mundial?",opts:["0 veces","1 vez","2 veces","Ninguna, siempre cae en octavos"],c:3},
-  {q:"¿En qué Mundial se dio el 'Partido del Siglo' entre Italia y Alemania?",opts:["1966","1970","1974","1978"],c:1},
-  {q:"¿Qué selección eliminó a México en el Mundial de Rusia 2018?",opts:["Alemania","Brasil","Francia","Argentina"],c:1},
-  // ── JUGADORES Y CLUBES ──
-  {q:"¿De qué club es hincha Lionel Messi de toda la vida?",opts:["River Plate","Boca Juniors","Newell's Old Boys","Racing Club"],c:2},
-  {q:"¿Con qué club debutó Cristiano Ronaldo profesionalmente?",opts:["Sporting Lisboa","Manchester United","Real Madrid","Juventus"],c:0},
-  {q:"¿Cuántos Balones de Oro tiene Lionel Messi?",opts:["6","7","8","9"],c:2},
-  {q:"¿Quién es el máximo goleador en la historia del Real Madrid?",opts:["Raúl","Cristiano Ronaldo","Benzema","Hugo Sánchez"],c:1},
-  {q:"¿En qué equipo juega actualmente Vinicius Jr.?",opts:["Barcelona","Manchester City","Real Madrid","PSG"],c:2},
-  {q:"¿Qué jugador lleva el número 10 histórico de la Selección Mexicana?",opts:["Chicharito","Cuauhtémoc Blanco","Hugo Sánchez","Andrés Guardado"],c:1},
-  {q:"¿Cuántos goles marcó Hugo Sánchez en la Liga española?",opts:["208 goles","234 goles","260 goles","290 goles"],c:1},
-  {q:"¿En qué equipo juega actualmente Lamine Yamal?",opts:["Real Madrid","Atlético de Madrid","Barcelona","PSG"],c:2},
-  {q:"¿Cuál es el apodo de Javier Hernández?",opts:["El Piojo","El Matador","Chicharito","El Chino"],c:2},
-  {q:"¿De qué país es Erling Haaland?",opts:["Suecia","Dinamarca","Noruega","Finlandia"],c:2},
-  // ── LIGAS Y COMPETENCIAS ──
-  {q:"¿Cuántos equipos participan en la Champions League actualmente?",opts:["32 equipos","36 equipos","48 equipos","24 equipos"],c:1},
-  {q:"¿Cuál es el equipo con más Champions League ganadas?",opts:["Barcelona","Bayern Munich","Real Madrid","AC Milan"],c:2},
-  {q:"¿Cuántos títulos de Champions tiene el Real Madrid?",opts:["12","14","15","16"],c:2},
-  {q:"¿En qué país se juega la Liga MX?",opts:["México","Colombia","Argentina","Chile"],c:0},
-  {q:"¿Cuál es el equipo más ganador de la Liga MX?",opts:["América","Chivas","Cruz Azul","Tigres"],c:0},
-  {q:"¿Cuántos equipos hay en la Liga MX (Apertura/Clausura)?",opts:["14 equipos","16 equipos","18 equipos","20 equipos"],c:2},
-  {q:"¿En qué año se fundó la FIFA?",opts:["1900","1904","1908","1912"],c:1},
-  {q:"¿Cuántos países miembro tiene la FIFA aproximadamente?",opts:["180","200","211","230"],c:2},
-  {q:"¿Quién ganó la última Copa América antes de 2026?",opts:["Brasil","Uruguay","Argentina","Colombia"],c:2},
-  {q:"¿Qué selección ganó la Eurocopa 2024?",opts:["Francia","Alemania","España","Portugal"],c:2},
-  // ── CURIOSIDADES ──
-  {q:"¿De qué material está hecho el trofeo de la Copa del Mundo?",opts:["Plata y oro","Oro sólido","Oro con base de malaquita","Platino con diamantes"],c:2},
-  {q:"¿Cuánto pesa el trofeo de la Copa del Mundo FIFA?",opts:["4.97 kg","6.17 kg","8.5 kg","3.2 kg"],c:1},
-  {q:"¿Cómo se llama el balón oficial del Mundial 2026?",opts:["Jabulani","Brazuca","Telstar","Adidas Puma X26"],c:2},
-  {q:"¿Cuál es el himno más famoso que suena en los estadios del Mundial?",opts:["We Are The Champions","Ole Ole Ole","Seven Nation Army","We Will Rock You"],c:2},
-  {q:"¿En qué año se introdujo el VAR (árbitro de video) en el Mundial?",opts:["2014","2018","2022","2010"],c:1},
-  {q:"¿Cuántos árbitros hay en la cancha en un partido de fútbol?",opts:["1","3","4","5"],c:1},
-  {q:"¿Cuántos metros mide un campo de fútbol reglamentario en longitud?",opts:["90-100 m","100-110 m","105 m (estándar FIFA)","120 m"],c:2},
-  {q:"¿Cada cuántos años se celebra la Copa del Mundo de fútbol?",opts:["2 años","3 años","4 años","5 años"],c:2},
-];
+const DIFFICULTY_ORDER=['easy','medium','hard'];
 
 const BRACKET=[
-  {id:'q1',round:'Cuartos de Final',label:'Cuartos A',teams:['Mexico','Brasil'],score:[0,0],winner:null},
-  {id:'q2',round:'Cuartos de Final',label:'Cuartos B',teams:['España','Argentina'],score:[0,0],winner:null},
-  {id:'q3',round:'Cuartos de Final',label:'Cuartos C',teams:['Francia','Alemania'],score:[0,0],winner:null},
-  {id:'q4',round:'Cuartos de Final',label:'Cuartos D',teams:['Portugal','Estados Unidos'],score:[0,0],winner:null},
+  {id:'q1',round:'Quarterfinals',label:'Quarterfinal A',teams:['Mexico','Brazil'],score:[0,0],winner:null},
+  {id:'q2',round:'Quarterfinals',label:'Quarterfinal B',teams:['Spain','Argentina'],score:[0,0],winner:null},
+  {id:'q3',round:'Quarterfinals',label:'Quarterfinal C',teams:['France','Germany'],score:[0,0],winner:null},
+  {id:'q4',round:'Quarterfinals',label:'Quarterfinal D',teams:['Portugal','United States'],score:[0,0],winner:null},
   {id:'s1',round:'Semifinal',label:'Semifinal 1',teams:[null,null],score:[0,0],winner:null},
   {id:'s2',round:'Semifinal',label:'Semifinal 2',teams:[null,null],score:[0,0],winner:null},
-  {id:'f1',round:'GRAN FINAL 🏆',label:'GRAN FINAL',teams:[null,null],score:[0,0],winner:null},
+  {id:'f1',round:'Grand Final',label:'Grand Final',teams:[null,null],score:[0,0],winner:null},
 ];
 
 // ══════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════
-let S={room:'',role:'',team:'',playerName:'',playerNum:'',activeMatch:null,qIdx:0,qActive:false,firstBuzz:null,answers:{},bracket:JSON.parse(JSON.stringify(BRACKET)),usedQs:[],curQ:null};
+let S={room:'',role:'',team:'',playerName:'',playerNum:'',activeMatch:null,qIdx:0,qActive:false,firstBuzz:null,answers:{},bracket:JSON.parse(JSON.stringify(BRACKET)),usedQs:{easy:[],medium:[],hard:[]},curQ:null,qCycle:0};
 let tmrInt=null,tmrSec=20,lastBuzzTs=0,lastEvTs=0,toastTmr=null;
 
 const gk=k=>`mq_${S.room}_${k}`;
@@ -866,13 +809,13 @@ function goHost(){
 function goPlayer(){
   unlockAudio();
   const name=document.getElementById('pname').value.trim();
-  if(!name){toast('¡Ingresa tu nombre!');document.getElementById('pname').focus();return;}
+  if(!name){toast('Enter your name!');document.getElementById('pname').focus();return;}
   const num=document.getElementById('pnum').value.trim();
-  if(!num){toast('¡Ingresa tu número de jugador!');document.getElementById('pnum').focus();return;}
+  if(!num){toast('Enter your player number!');document.getElementById('pnum').focus();return;}
   const t=document.getElementById('ts').value;
-  if(!t){toast('¡Elige tu equipo primero!');return;}
+  if(!t){toast('Choose your team first!');return;}
   const r=document.getElementById('rip').value.trim().toLowerCase().replace(/\s+/g,'-');
-  if(!r){toast('¡Ingresa el Room ID del host primero!');document.getElementById('rip').focus();return;}
+  if(!r){toast('Enter the host Room ID first!');document.getElementById('rip').focus();return;}
   S.room=r;S.role='player';S.team=t;S.playerName=name;S.playerNum=num;
   lastEvTs=Date.now();lastBuzzTs=Date.now();
   setupBC();renderPlayer();ss('ps');startPoll();
@@ -928,9 +871,9 @@ function saveBracket(){
 }
 
 function resetAll(){
-  if(!confirm('¿Resetear todos los marcadores y el bracket? Esto no se puede deshacer.'))return;
+  if(!confirm('Reset all scores and the bracket? This cannot be undone.'))return;
   S.bracket=JSON.parse(JSON.stringify(BRACKET));
-  S.activeMatch=null;S.qIdx=0;S.qActive=false;S.firstBuzz=null;S.answers={};S.curQ=null;S.usedQs=[];
+  S.activeMatch=null;S.qIdx=0;S.qActive=false;S.firstBuzz=null;S.answers={};S.curQ=null;S.usedQs={easy:[],medium:[],hard:[]};S.qCycle=0;
   // Limpiar localStorage del room
   try{
     localStorage.removeItem(`mq_${S.room}_bracket`);
@@ -938,14 +881,14 @@ function resetAll(){
       m.teams.forEach(t=>{if(t)localStorage.removeItem(gk(`goals_${t}`));});
     });
     // También limpiar equipos de semis/final que pueden haber avanzado
-    ['Mexico','Brasil','España','Argentina','Francia','Alemania','Portugal','Estados Unidos'].forEach(t=>{
+    ['Mexico','Brazil','Spain','Argentina','France','Germany','Portugal','United States'].forEach(t=>{
       localStorage.removeItem(gk(`goals_${t}`));
     });
   }catch{}
   clearInterval(tmrInt);tmrInt=null;S.qActive=false;
   document.getElementById('ga').style.display='none';
   renderBkt();renderMBtns();
-  toast('✅ Marcadores reseteados');
+  toast('Scores reset successfully');
 }
 
 function renderHost(){renderBkt();renderMBtns()}
@@ -984,7 +927,7 @@ function renderMBtns(){
 
 function selMatch(id){
   const m=S.bracket.find(x=>x.id===id);
-  if(!m||!m.teams[0]||!m.teams[1]){toast('Partido no disponible aún');return;}
+  if(!m||!m.teams[0]||!m.teams[1]){toast('Match not available yet');return;}
   S.activeMatch=id;S.qIdx=0;S.qActive=false;S.firstBuzz=null;S.answers={};
   renderBkt();renderMBtns();
   const ga=document.getElementById('ga');ga.style.display='block';
@@ -992,12 +935,12 @@ function selMatch(id){
   document.getElementById('rbdg').textContent=m.round;
   document.getElementById('mtl').textContent=m.label;
   updHSB(m);
-  document.getElementById('qtxt').textContent='Presiona "Iniciar Pregunta" para comenzar';
+  document.getElementById('qtxt').textContent='Press Start Question to begin';
   document.getElementById('opts-host').innerHTML='';
   resetBuzzBar();
   document.getElementById('ansr').classList.remove('show');
   document.getElementById('qc').textContent='1';
-  document.getElementById('qlb').textContent='PREGUNTA 1';
+  document.getElementById('qlb').textContent='QUESTION 1';
   resetBtns();
 }
 
@@ -1012,10 +955,19 @@ function updHSB(m){
 }
 
 function getQ(){
-  const avail=QS.map((_,i)=>i).filter(i=>!S.usedQs.includes(i));
-  if(!avail.length){S.usedQs=[];return getQ();}
+  const bucket=DIFFICULTY_ORDER[S.qCycle%DIFFICULTY_ORDER.length];
+  const pool=window.QUESTION_BATCHES?.[bucket]||[];
+  if(!pool.length)throw new Error(`Missing question pool: ${bucket}`);
+  const used=S.usedQs[bucket]||[];
+  const avail=pool.map((_,i)=>i).filter(i=>!used.includes(i));
+  if(!avail.length){
+    S.usedQs[bucket]=[];
+    return getQ();
+  }
   const idx=avail[Math.floor(Math.random()*avail.length)];
-  S.usedQs.push(idx);return QS[idx];
+  S.usedQs[bucket].push(idx);
+  S.qCycle++;
+  return {...pool[idx],difficulty:bucket};
 }
 
 function hStartQ(){
@@ -1023,6 +975,7 @@ function hStartQ(){
   const m=S.bracket.find(x=>x.id===S.activeMatch);
   const q=getQ();S.curQ=q;S.firstBuzz=null;S.answers={};S.qActive=true;
 
+  document.getElementById('qlb').textContent=`QUESTION ${S.qIdx+1} - ${q.difficulty.toUpperCase()}`;
   document.getElementById('qtxt').textContent=q.q;
   document.getElementById('ansrtxt').textContent=q.opts[q.c];
 
@@ -1041,14 +994,14 @@ function hStartQ(){
   document.getElementById('brv').disabled=false;
   document.getElementById('bnx').disabled=true;
 
-  pub('question_start',{q:q.q,opts:q.opts,teams:m.teams,matchId:m.id});
+  pub('question_start',{q:q.q,opts:q.opts,teams:m.teams,matchId:m.id,difficulty:q.difficulty});
   startTmr();
 }
 
 function resetBuzzBar(){
   const bar=document.getElementById('bzbar');
   bar.classList.remove('has-buzz');
-  bar.querySelector('.bl').textContent='Esperando respuestas...';
+  bar.querySelector('.bl').textContent='Waiting for answers...';
   document.getElementById('bzentries').innerHTML='';
 }
 
@@ -1063,7 +1016,7 @@ function startTmr(){
       clearInterval(tmrInt);el.textContent='⏰';
       if(!S.firstBuzz){
         resetBuzzBar();
-        document.getElementById('bzbar').querySelector('.bl').textContent='⏰ Tiempo agotado — nadie respondió';
+        document.getElementById('bzbar').querySelector('.bl').textContent='Time is up - nobody answered';
         document.getElementById('brv').disabled=false;
         document.getElementById('bnx').disabled=false;
         document.getElementById('bco').disabled=true;
@@ -1103,14 +1056,14 @@ function onBuzz(buzz){
   const div=document.createElement('div');
   div.className=`be ${isFirst?'first':''} ${isCorrect?'ans-ok':'ans-no'}`;
   const playerLabel=buzz.name?`${buzz.name} #${buzz.num} · ${buzz.team.toUpperCase()}`:buzz.team.toUpperCase();
-  div.innerHTML=`<span class="bef">${flagImg(buzz.team,'md')}</span><span class="ben">${playerLabel}</span><span class="bea">${LABS[buzz.answerIdx]} ${isCorrect?'✓ CORRECTO':'✗ INCORRECTO'}</span>`;
+  div.innerHTML=`<span class="bef">${flagImg(buzz.team,'md')}</span><span class="ben">${playerLabel}</span><span class="bea">${LABS[buzz.answerIdx]} ${isCorrect?'CORRECT':'WRONG'}</span>`;
   entries.appendChild(div);
 
   document.getElementById('bzbar').classList.add('has-buzz');
-  document.getElementById('bzbar').querySelector('.bl').textContent='Respuestas recibidas:';
+  document.getElementById('bzbar').querySelector('.bl').textContent='Answers received:';
 
   sfxBuzz();
-  toast(`${T[buzz.team]?.f} ${buzz.team} → Opción ${LABS[buzz.answerIdx]}`);
+  toast(`${buzz.team} -> Option ${LABS[buzz.answerIdx]}`);
 
   if(isFirst){
     document.getElementById('bco').disabled=false;
@@ -1150,7 +1103,7 @@ function hWrong(){
   const LABS=['A','B','C','D'];
   document.getElementById(`opt-host-${S.curQ.c}`)?.classList.add('correct-opt');
   pub('question_end',{result:'wrong',team:S.firstBuzz,correctIdx:S.curQ.c});
-  sfxWrong();toast(`❌ Incorrecto — la respuesta era: ${S.curQ.opts[S.curQ.c]}`);
+  sfxWrong();toast(`Wrong - the correct answer was: ${S.curQ.opts[S.curQ.c]}`);
   document.getElementById('bco').disabled=true;
   document.getElementById('bwr').disabled=true;
   document.getElementById('bnx').disabled=false;
@@ -1168,12 +1121,12 @@ const GOALS_TO_WIN = 3;
 function hNext(){
   S.qIdx++;
   document.getElementById('qc').textContent=S.qIdx+1;
-  document.getElementById('qlb').textContent=`PREGUNTA ${S.qIdx+1}`;
+  document.getElementById('qlb').textContent=`QUESTION ${S.qIdx+1}`;
   resetBtns();S.firstBuzz=null;S.answers={};S.qActive=false;
   resetBuzzBar();
   document.getElementById('opts-host').innerHTML='';
   document.getElementById('ansr').classList.remove('show');
-  document.getElementById('qtxt').textContent='Presiona "Iniciar Pregunta"';
+  document.getElementById('qtxt').textContent='Press Start Question';
   document.getElementById('qtmr').textContent='—';
   document.getElementById('qtmr').classList.remove('urg');
 }
@@ -1220,11 +1173,11 @@ function renderLinks(){
       <div class="lcfl">${T[t].f}</div>
       <div class="lcnm">${t.toUpperCase()}</div>
       <div class="lcurl">${url}</div>
-      <button class="lccp" onclick="cpLink('${url}',this)">📋 Copiar</button>
+      <button class="lccp" onclick="cpLink('${url}',this)">Copy</button>
     </div>`;
   }).join('');
 }
-function cpLink(url,btn){navigator.clipboard.writeText(url).then(()=>{btn.textContent='✓ Copiado!';setTimeout(()=>btn.textContent='📋 Copiar',2000)});}
+function cpLink(url,btn){navigator.clipboard.writeText(url).then(()=>{btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',2000)});}
 
 // ══════════════════════════════════════════
 // PLAYER
@@ -1239,6 +1192,7 @@ function pQStart(d){
     showPanel('pbench');return;
   }
   document.getElementById('pqtxt').textContent=d.q;
+  document.getElementById('pminfo').innerHTML=`<div class="match-info-pill">${d.difficulty ? d.difficulty.toUpperCase() : 'QUESTION'}</div>`;
   const LABS=['A','B','C','D'];
   document.getElementById('opts-player').innerHTML=d.opts.map((o,i)=>`
     <button class="opt-btn" id="popt-${i}" onclick="pAnswer(${i})">
@@ -1278,18 +1232,18 @@ function pQEnd(d){
   setTimeout(()=>{
     if(d.result==='timeout'){
       showPanel('pwait');
-      document.getElementById('pminfo').textContent='';
+      document.getElementById('pminfo').innerHTML='';
       return;
     }
     if(isCorrect){
       document.getElementById('bri').textContent='⚽';
-      document.getElementById('brt').textContent='¡GOL!';
-      document.getElementById('brsub').textContent='Respuesta correcta 🎉';
+      document.getElementById('brt').textContent='GOAL!';
+      document.getElementById('brsub').textContent='Correct answer!';
       sfxGol();launchConfetti();
     } else if(isWrong){
       document.getElementById('bri').textContent='❌';
-      document.getElementById('brt').textContent='INCORRECTO';
-      document.getElementById('brsub').textContent=`La respuesta era: ${d.correctIdx!==undefined?['A','B','C','D'][d.correctIdx]:'?'}`;
+      document.getElementById('brt').textContent='WRONG';
+      document.getElementById('brsub').textContent=`Correct option: ${d.correctIdx!==undefined?['A','B','C','D'][d.correctIdx]:'?'}`;
       sfxWrong();
     } else {
       // Other team answered — show correct in options first, then go back to waiting
@@ -1357,7 +1311,7 @@ function closeSorteo(){document.getElementById('sorteo-modal').classList.remove(
 function sortear(){
   const raw=document.getElementById('sorteo-input').value;
   const names=raw.split('\n').map(n=>n.trim()).filter(n=>n.length>0);
-  if(names.length===0){alert('Ingresa al menos un nombre');return;}
+  if(names.length===0){alert('Enter at least one name');return;}
 
   // Shuffle names
   const shuffled=[...names].sort(()=>Math.random()-.5);
@@ -1377,7 +1331,7 @@ function sortear(){
       </div>
       ${assigned[t].length>0
         ? assigned[t].map(n=>`<div class="sorteo-player">👤 ${n}</div>`).join('')
-        : '<div class="sorteo-empty">Sin jugador</div>'}
+        : '<div class="sorteo-empty">No players assigned</div>'}
     </div>`).join('');
   document.getElementById('sorteo-results').style.display='grid';
 }
@@ -1391,7 +1345,7 @@ function copiarSorteo(){
     r.querySelectorAll('.sorteo-player').forEach(p=>txt+=`  ${p.textContent.replace('👤 ','')}\n`);
     txt+='\n';
   });
-  navigator.clipboard.writeText(txt.trim()).then(()=>toast('✅ Sorteo copiado'));
+  navigator.clipboard.writeText(txt.trim()).then(()=>toast('Team draw copied'));
 }
 </script>
 
@@ -1399,17 +1353,17 @@ function copiarSorteo(){
 <div id="sorteo-modal">
   <div class="sorteo-box">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <h2>🎲 Sortear Equipos</h2>
-      <button class="btn btn-ghost" onclick="closeSorteo()" style="font-size:12px;padding:6px 12px">✕ Cerrar</button>
+      <h2>Team Draw</h2>
+      <button class="btn btn-ghost" onclick="closeSorteo()" style="font-size:12px;padding:6px 12px">Close</button>
     </div>
     <div class="fg" style="margin-bottom:12px">
-      <label>Nombres de participantes (uno por línea)</label>
+      <label>Participant names (one per line)</label>
       <textarea id="sorteo-input" placeholder="Jorge&#10;María&#10;Carlos&#10;Ana&#10;..."></textarea>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <button class="btn btn-gold" onclick="sortear()" style="font-size:13px">🎲 Sortear</button>
-      <button class="btn btn-ghost" onclick="sortear()" style="font-size:13px">🔀 Volver a Sortear</button>
-      <button class="btn btn-ghost" onclick="copiarSorteo()" style="font-size:13px">📋 Copiar Resultado</button>
+      <button class="btn btn-gold" onclick="sortear()" style="font-size:13px">Draw Teams</button>
+      <button class="btn btn-ghost" onclick="sortear()" style="font-size:13px">Redraw</button>
+      <button class="btn btn-ghost" onclick="copiarSorteo()" style="font-size:13px">Copy Result</button>
     </div>
     <div class="sorteo-results" id="sorteo-results" style="display:none"></div>
   </div>

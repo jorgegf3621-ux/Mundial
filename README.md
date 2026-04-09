@@ -1,42 +1,51 @@
-# 🏆 Mundial 2026 Quiz — Amalga Group
+# World Cup 2026 Quiz - Amalga Group
 
-Juego de trivia multijugador con temática del Mundial FIFA 2026 para Team Wide Call.
+Multiplayer football trivia game for a Team Wide Call.
 
-## Estructura
+## Structure
 
-```
+```text
 mundial-quiz/
-├── index.html      ← App completa (single file)
-├── vercel.json     ← Config para deploy en Vercel
+├── index.html      <- Main app
+├── questions.js    <- 200+ question bank in easy / medium / hard batches
+├── vercel.json     <- Vercel config
 ├── .gitignore
 └── README.md
 ```
 
-## Cómo usar
+## How to use
 
-### Como HOST
-1. Abre `index.html` en el navegador
-2. Escribe un Room ID (ej: `amalga2026`)
-3. Click **Entrar como HOST**
-4. Copia los links de cada equipo desde el panel y compártelos
+### Host
+1. Open `index.html` in the browser.
+2. Enter a Room ID such as `amalga2026`.
+3. Click `Host View`.
+4. Share the generated team links with players.
 
-### Como Jugador
-Abre el link que te dio el host, elige tu país y entra.
+### Player
+1. Open the shared link or enter the Room ID manually.
+2. Pick your country.
+3. Enter your name and player number.
+4. Click `Player View`.
 
-## Formato del torneo
-- **8 equipos** — México, Brasil, España, Argentina, Francia, Alemania, Portugal, Inglaterra
-- **Bracket eliminatorio** — Cuartos → Semis → Gran Final
-- **Gana el primero en llegar a 3 goles** por partido
-- **74 preguntas** en el banco, opción múltiple A/B/C/D
-- Música, confetti y efectos de sonido incluidos
+## Tournament format
 
-## Deploy en Vercel
-1. Sube esta carpeta a un repo de GitHub
-2. Conecta el repo en vercel.com
-3. Framework: `Other`, Build command: vacío, Output: vacío
-4. Deploy ✓
+- 8 teams: Mexico, Brazil, Spain, Argentina, France, Germany, Portugal, United States
+- Knockout bracket: Quarterfinals -> Semifinals -> Grand Final
+- First team to 3 goals wins each match
+- 200+ possible questions with multiple choice answers
+- Difficulty rotation: easy -> medium -> hard -> repeat
+- Music, confetti, and sound effects included
 
-## Nota sobre multiplayer
-El juego usa `localStorage` + `BroadcastChannel` para sincronización.  
-Funciona entre tabs del mismo navegador.  
-Para multidispositivo real se requiere backend (Supabase Realtime).
+## Deploy on Vercel
+
+1. Push this folder to a GitHub repository.
+2. Import the repo on `vercel.com`.
+3. Use `Other` as the framework preset.
+4. Leave build and output settings empty.
+5. Deploy.
+
+## Multiplayer note
+
+The game syncs through `localStorage` and `BroadcastChannel`.
+It works across tabs in the same browser.
+For true multi-device realtime play, a backend such as Supabase Realtime would be needed.
