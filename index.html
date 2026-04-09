@@ -1085,7 +1085,7 @@ function onBuzz(buzz){
   const entries=document.getElementById('bzentries');
   const div=document.createElement('div');
   div.className=`be ${isFirst?'first':''} ${isCorrect?'ans-ok':'ans-no'}`;
-  const playerLabel=buzz.name?`${buzz.name} #${buzz.num}`:buzz.team.toUpperCase();
+  const playerLabel=buzz.name?`${buzz.name} #${buzz.num} · ${buzz.team.toUpperCase()}`:buzz.team.toUpperCase();
   div.innerHTML=`<span class="bef">${flagImg(buzz.team,'md')}</span><span class="ben">${playerLabel}</span><span class="bea">${LABS[buzz.answerIdx]} ${isCorrect?'✓ CORRECTO':'✗ INCORRECTO'}</span>`;
   entries.appendChild(div);
 
