@@ -750,6 +750,7 @@ function goHost(){
     if(saved)S.bracket=JSON.parse(saved);
     else S.bracket=JSON.parse(JSON.stringify(BRACKET));
   }catch{S.bracket=JSON.parse(JSON.stringify(BRACKET));}
+  localStorage.setItem('mq_session',JSON.stringify({role:'host',room:r}));
   setupBC();renderHost();ss('hs');
   document.getElementById('rlb').textContent=r;
   renderLinks();
@@ -766,6 +767,7 @@ function goPlayer(){
   if(!r){toast('Enter the host Room ID first!');document.getElementById('rip').focus();return;}
   S.room=r;S.role='player';S.team=t;S.playerName=name;S.playerNum=num;
   lastEvTs=Date.now();lastBuzzTs=Date.now();
+  localStorage.setItem('mq_session',JSON.stringify({role:'player',room:r,team:t,playerName:name,playerNum:num}));
   setupBC();renderPlayer();ss('ps');startPoll();
 }
 
@@ -774,6 +776,7 @@ function goBack(){
   _ch=null;
   S.role=null;S.room=null;S.team=null;S.activeMatch=null;S.qActive=false;S.curQ=null;S.firstBuzz=null;S.answers={};
   lastEvTs=0;lastBuzzTs=0;
+  localStorage.removeItem('mq_session');
   ss('ls');
 }
 
@@ -1212,8 +1215,25 @@ window.addEventListener('load',()=>{
   const r=p.get('room'),t=p.get('team'),role=p.get('role');
   if(r){document.getElementById('ri').value=r;document.getElementById('rip').value=r;}
   if(t)document.getElementById('ts').value=t;
-  if(r&&role==='host')setTimeout(goHost,150);
-  else if(r&&t)setTimeout(goPlayer,150);
+  if(r&&role==='host'){setTimeout(goHost,150);return;}
+  if(r&&t){setTimeout(goPlayer,150);return;}
+
+  // Restore saved session on refresh
+  try{
+    const saved=JSON.parse(localStorage.getItem('mq_session')||'null');
+    if(saved&&saved.room){
+      if(saved.role==='host'){
+        document.getElementById('ri').value=saved.room;
+        setTimeout(goHost,150);
+      } else if(saved.role==='player'){
+        document.getElementById('rip').value=saved.room;
+        document.getElementById('ts').value=saved.team;
+        document.getElementById('pname').value=saved.playerName||'';
+        document.getElementById('pnum').value=saved.playerNum||'';
+        setTimeout(goPlayer,150);
+      }
+    }
+  }catch{}
 });
 
 // ══════════════════════════════════════════
