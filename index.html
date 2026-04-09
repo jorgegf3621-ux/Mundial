@@ -439,8 +439,6 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
   </div>
 
   <div style="width:100%;max-width:860px;margin-bottom:8px">
-    <div style="font-size:10px;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-bottom:8px">🔗 Links rápidos</div>
-    <div id="qlinks" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px"></div>
     <div style="font-size:10px;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-bottom:8px">🔗 Links por equipo — comparte con cada team</div>
     <div class="lpan" id="lpan"></div>
   </div>
@@ -1182,18 +1180,6 @@ function renderLinks(){
   const base=`${location.origin}${location.pathname}`;
   const hostUrl=`${base}?room=${S.room}&role=host`;
   const playerUrl=`${base}?room=${S.room}`;
-
-  document.getElementById('qlinks').innerHTML=`
-    <div class="lc" style="flex:1;min-width:200px;border-color:rgba(245,194,0,.3);background:rgba(245,194,0,.06)">
-      <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:2px">🎙 Link Host</div>
-      <div class="lcurl">${hostUrl}</div>
-      <button class="lccp" onclick="cpLink('${hostUrl}',this)">📋 Copiar</button>
-    </div>
-    <div class="lc" style="flex:1;min-width:200px;border-color:rgba(37,168,82,.3);background:rgba(37,168,82,.06)">
-      <div style="font-size:10px;letter-spacing:2px;color:var(--gl);text-transform:uppercase;margin-bottom:2px">⚽ Link Jugadores</div>
-      <div class="lcurl">${playerUrl}</div>
-      <button class="lccp" onclick="cpLink('${playerUrl}',this)">📋 Copiar</button>
-    </div>`;
 
   document.getElementById('lpan').innerHTML=Object.keys(T).map(t=>{
     const url=`${base}?room=${S.room}&team=${encodeURIComponent(t)}`;
