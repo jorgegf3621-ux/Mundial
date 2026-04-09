@@ -341,7 +341,7 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
     <img src="https://flagcdn.com/w80/fr.png" style="height:28px;border-radius:3px">
     <img src="https://flagcdn.com/w80/de.png" style="height:28px;border-radius:3px">
     <img src="https://flagcdn.com/w80/pt.png" style="height:28px;border-radius:3px">
-    <img src="https://flagcdn.com/w80/gb.png" style="height:28px;border-radius:3px">
+    <img src="https://flagcdn.com/w80/us.png" style="height:28px;border-radius:3px">
   </div>
   <div class="card">
     <h2>¿Cómo entras?</h2>
@@ -364,7 +364,7 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
         <option value="Francia">🇫🇷 Francia</option>
         <option value="Alemania">🇩🇪 Alemania</option>
         <option value="Portugal">🇵🇹 Portugal</option>
-        <option value="Inglaterra">🇬🇧 Inglaterra</option>
+        <option value="Estados Unidos">🇺🇸 Estados Unidos</option>
       </select>
     </div>
     <div class="fg">
@@ -706,7 +706,7 @@ initFloaters();
 // ══════════════════════════════════════════
 const T={
   Mexico:{f:'🇲🇽',cc:'mx'},Brasil:{f:'🇧🇷',cc:'br'},España:{f:'🇪🇸',cc:'es'},Argentina:{f:'🇦🇷',cc:'ar'},
-  Francia:{f:'🇫🇷',cc:'fr'},Alemania:{f:'🇩🇪',cc:'de'},Portugal:{f:'🇵🇹',cc:'pt'},Inglaterra:{f:'🇬🇧',cc:'gb'}
+  Francia:{f:'🇫🇷',cc:'fr'},Alemania:{f:'🇩🇪',cc:'de'},Portugal:{f:'🇵🇹',cc:'pt'},'Estados Unidos':{f:'🇺🇸',cc:'us'}
 };
 const flagImg=(team,size)=>{
   const cc=T[team]?.cc;if(!cc)return '·';
@@ -800,7 +800,7 @@ const BRACKET=[
   {id:'q1',round:'Cuartos de Final',label:'Cuartos A',teams:['Mexico','Brasil'],score:[0,0],winner:null},
   {id:'q2',round:'Cuartos de Final',label:'Cuartos B',teams:['España','Argentina'],score:[0,0],winner:null},
   {id:'q3',round:'Cuartos de Final',label:'Cuartos C',teams:['Francia','Alemania'],score:[0,0],winner:null},
-  {id:'q4',round:'Cuartos de Final',label:'Cuartos D',teams:['Portugal','Inglaterra'],score:[0,0],winner:null},
+  {id:'q4',round:'Cuartos de Final',label:'Cuartos D',teams:['Portugal','Estados Unidos'],score:[0,0],winner:null},
   {id:'s1',round:'Semifinal',label:'Semifinal 1',teams:[null,null],score:[0,0],winner:null},
   {id:'s2',round:'Semifinal',label:'Semifinal 2',teams:[null,null],score:[0,0],winner:null},
   {id:'f1',round:'GRAN FINAL 🏆',label:'GRAN FINAL',teams:[null,null],score:[0,0],winner:null},
@@ -910,7 +910,7 @@ function resetAll(){
       m.teams.forEach(t=>{if(t)localStorage.removeItem(gk(`goals_${t}`));});
     });
     // También limpiar equipos de semis/final que pueden haber avanzado
-    ['Mexico','Brasil','España','Argentina','Francia','Alemania','Portugal','Inglaterra'].forEach(t=>{
+    ['Mexico','Brasil','España','Argentina','Francia','Alemania','Portugal','Estados Unidos'].forEach(t=>{
       localStorage.removeItem(gk(`goals_${t}`));
     });
   }catch{}
