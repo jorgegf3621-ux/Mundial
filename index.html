@@ -606,7 +606,7 @@ function sfxBuzz(){
 }
 function sfxGol(){
   unlockAudio();
-  // Crowd roar sweep + fanfare
+  try{const a=new Audio('assets/Goool  Efecto de sonido.mp3');a.volume=0.8;a.play().catch(()=>{});}catch{}
   [523,659,784,1047,1047,1319].forEach((f,i)=>playTone(f,0.2,'triangle',0.15,i*0.1));
   // Crowd noise burst
   const b=AC.createBuffer(1,AC.sampleRate*1.5,AC.sampleRate);
