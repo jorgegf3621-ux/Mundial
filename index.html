@@ -353,6 +353,16 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
     <button class="btn btn-gold w100" style="margin-bottom:10px" onclick="goHost()">🎙 Entrar como HOST</button>
     <div class="divider">o</div>
     <!-- JUGADOR -->
+    <div style="display:flex;gap:10px">
+      <div class="fg" style="flex:2">
+        <label>Tu nombre</label>
+        <input id="pname" type="text" placeholder="Ej: Jorge" maxlength="20"/>
+      </div>
+      <div class="fg" style="flex:1">
+        <label># Jugador</label>
+        <input id="pnum" type="number" placeholder="10" min="1" max="99" style="text-align:center"/>
+      </div>
+    </div>
     <div class="fg">
       <label>Tu equipo / país</label>
       <select id="ts">
@@ -807,7 +817,7 @@ const BRACKET=[
 // ══════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════
-let S={room:'',role:'',team:'',activeMatch:null,qIdx:0,qActive:false,firstBuzz:null,answers:{},bracket:JSON.parse(JSON.stringify(BRACKET)),usedQs:[],curQ:null};
+let S={room:'',role:'',team:'',playerName:'',playerNum:'',activeMatch:null,qIdx:0,qActive:false,firstBuzz:null,answers:{},bracket:JSON.parse(JSON.stringify(BRACKET)),usedQs:[],curQ:null};
 let tmrInt=null,tmrSec=20,lastBuzzTs=0,lastEvTs=0,toastTmr=null;
 
 const gk=k=>`mq_${S.room}_${k}`;
@@ -838,11 +848,15 @@ function goHost(){
 }
 function goPlayer(){
   unlockAudio();
-  const r=document.getElementById('rip').value.trim().toLowerCase().replace(/\s+/g,'-');
-  if(!r){toast('¡Ingresa el Room ID del host primero!');document.getElementById('rip').focus();return;}
+  const name=document.getElementById('pname').value.trim();
+  if(!name){toast('¡Ingresa tu nombre!');document.getElementById('pname').focus();return;}
+  const num=document.getElementById('pnum').value.trim();
+  if(!num){toast('¡Ingresa tu número de jugador!');document.getElementById('pnum').focus();return;}
   const t=document.getElementById('ts').value;
   if(!t){toast('¡Elige tu equipo primero!');return;}
-  S.room=r;S.role='player';S.team=t;
+  const r=document.getElementById('rip').value.trim().toLowerCase().replace(/\s+/g,'-');
+  if(!r){toast('¡Ingresa el Room ID del host primero!');document.getElementById('rip').focus();return;}
+  S.room=r;S.role='player';S.team=t;S.playerName=name;S.playerNum=num;
   lastEvTs=Date.now();lastBuzzTs=Date.now();
   setupBC();renderPlayer();ss('ps');startPoll();
 }
@@ -883,7 +897,6 @@ window.addEventListener('storage',e=>{
 function handleEv(ev){
   if(!ev)return;
   if(ev.event==='question_start'&&S.role==='player')pQStart(ev.data);
-  else if(ev.event==='buzz'&&S.role==='host')onBuzz(ev.data);
   else if(ev.event==='question_end'&&S.role==='player')pQEnd(ev.data);
   else if(ev.event==='goal'){showGoal(ev.data.team,ev.data.answer);}
   else if(ev.event==='match_winner'&&S.role!=='host')showWin(ev.data.team);
@@ -1054,6 +1067,8 @@ setInterval(()=>{
 
 function onBuzz(buzz){
   if(!S.qActive)return;
+  if(buzz.ts<=lastBuzzTs)return;
+  lastBuzzTs=buzz.ts;
   const m=S.bracket.find(x=>x.id===S.activeMatch);
   if(!m||!m.teams.includes(buzz.team))return;
   // Record answer for this team
@@ -1070,7 +1085,8 @@ function onBuzz(buzz){
   const entries=document.getElementById('bzentries');
   const div=document.createElement('div');
   div.className=`be ${isFirst?'first':''} ${isCorrect?'ans-ok':'ans-no'}`;
-  div.innerHTML=`<span class="bef">${flagImg(buzz.team,'md')}</span><span class="ben">${buzz.team.toUpperCase()}</span><span class="bea">${LABS[buzz.answerIdx]} ${isCorrect?'✓ CORRECTO':'✗ INCORRECTO'}</span>`;
+  const playerLabel=buzz.name?`${buzz.name} #${buzz.num}`:buzz.team.toUpperCase();
+  div.innerHTML=`<span class="bef">${flagImg(buzz.team,'md')}</span><span class="ben">${playerLabel}</span><span class="bea">${LABS[buzz.answerIdx]} ${isCorrect?'✓ CORRECTO':'✗ INCORRECTO'}</span>`;
   entries.appendChild(div);
 
   document.getElementById('bzbar').classList.add('has-buzz');
@@ -1222,9 +1238,8 @@ function pAnswer(idx){
   }
   document.getElementById(`popt-${idx}`)?.classList.add('selected');
   sfxSelect();
-  const buzz={team:S.team,answerIdx:idx,ts:Date.now()};
+  const buzz={team:S.team,answerIdx:idx,ts:Date.now(),name:S.playerName,num:S.playerNum};
   localStorage.setItem(gk('buzz'),JSON.stringify(buzz));
-  pub('buzz',buzz);
   // Show "waiting for result" state
   document.getElementById(`popt-${idx}`).innerHTML=`<span class="olbl" style="color:var(--gold)">${['A','B','C','D'][idx]}</span><span>${document.getElementById(`popt-${idx}`).querySelector('span:last-child').textContent} ⏳</span>`;
 }
