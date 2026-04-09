@@ -60,7 +60,7 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
 .trophy-wrap{position:relative;display:inline-block;margin-bottom:10px}
 .trophy{font-size:80px;filter:drop-shadow(0 0 30px rgba(245,194,0,.7));animation:trophyBob 2.5s ease-in-out infinite}
 @keyframes trophyBob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
-.worldcup-img{width:72px;height:auto;display:block;filter:drop-shadow(0 0 22px rgba(245,194,0,.55))}
+.worldcup-img{width:90px;height:auto;display:block;margin:0 auto 8px;filter:drop-shadow(0 0 28px rgba(245,194,0,.6))}
 
 .title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,10vw,110px);letter-spacing:6px;line-height:.85;color:var(--w);text-shadow:0 4px 30px rgba(0,0,0,.5)}
 .title span{color:var(--gold);text-shadow:0 0 40px rgba(245,194,0,.5)}
@@ -345,9 +345,11 @@ body{font-family:'Barlow',sans-serif;background:var(--k);color:var(--w);min-heig
   <div class="trophy-wrap">
     <img
       class="worldcup-img"
-      src="https://upload.wikimedia.org/wikipedia/commons/d/d3/FIFA_World_Cup_Trophy.svg"
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/FIFA_World_Cup.svg/200px-FIFA_World_Cup.svg.png"
       alt="World Cup Trophy"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
     />
+    <div class="trophy" style="display:none">&#127942;</div>
   </div>
   <div class="title">MUNDIAL<br><span>2026</span></div>
   <div class="title-year"></div>

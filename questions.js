@@ -71,7 +71,9 @@ window.QUESTION_BATCHES = {
     makeQ("How many goals did Mbappe score in the 2022 World Cup final?", ["1", "2", "3", "4"], 2),
     makeQ("Which club is based in Manchester and plays at the Etihad Stadium?", ["Manchester United", "Manchester City", "Bolton", "Leeds United"], 1),
     makeQ("Which country is famous for the club Boca Juniors?", ["Uruguay", "Argentina", "Chile", "Brazil"], 1),
-    makeQ("What do players usually do before a penalty kick is taken?", ["Stand behind halfway", "Stay outside the box and arc", "Leave the field", "Change ends"], 1)
+    makeQ("What do players usually do before a penalty kick is taken?", ["Stand behind halfway", "Stay outside the box and arc", "Leave the field", "Change ends"], 1),
+    makeQ("How many minutes of added time are typical at the end of each half?", ["1-5 minutes", "10 minutes", "15 minutes", "20 minutes"], 0),
+    makeQ("What does the referee blow a whistle to indicate?", ["The start or stop of play", "A substitution only", "The end of the match only", "A goal celebration"], 0),
   ],
   medium: [
     makeQ("Who scored the winning goal in the 2010 World Cup final?", ["David Villa", "Andres Iniesta", "Xavi", "Fernando Torres"], 1),
@@ -145,7 +147,12 @@ window.QUESTION_BATCHES = {
     makeQ("Which country won the 2024 Olympic women's football gold medal?", ["United States", "Brazil", "Spain", "Germany"], 0),
     makeQ("Which nation reached the semifinals of the 2022 men's World Cup as the first African team to do so?", ["Senegal", "Morocco", "Ghana", "Cameroon"], 1),
     makeQ("Which player scored Spain's extra-time winner in the 2010 World Cup semifinal against Germany?", ["David Silva", "Carles Puyol", "David Villa", "Andres Iniesta"], 1),
-    makeQ("Which team defeated Brazil 7-1 in the 2014 World Cup semifinal?", ["Argentina", "Germany", "Netherlands", "France"], 1)
+    makeQ("Which team defeated Brazil 7-1 in the 2014 World Cup semifinal?", ["Argentina", "Germany", "Netherlands", "France"], 1),
+    makeQ("Who scored a hat-trick for England against Panama in the 2018 World Cup?", ["Harry Kane", "Marcus Rashford", "John Stones", "Jesse Lingard"], 2),
+    makeQ("Which nation eliminated Brazil in the quarterfinals of the 2022 World Cup?", ["Croatia", "France", "Argentina", "Morocco"], 0),
+    makeQ("Which player scored 5 goals in a single World Cup match?", ["Just Fontaine", "Oleg Salenko", "Sandor Kocsis", "Gerd Muller"], 1),
+    makeQ("What is the fastest goal ever scored in World Cup history?", ["11 seconds", "18 seconds", "25 seconds", "30 seconds"], 0),
+    makeQ("Which player has received the most red cards in international football?", ["Gerardo Bedoya", "Sergio Ramos", "Pepe", "Vidal"], 0),
   ],
   hard: [
     makeQ("Who scored the only goal in the 1990 World Cup final?", ["Lothar Matthaus", "Andreas Brehme", "Rudi Voller", "Jurgen Klinsmann"], 1),
@@ -220,6 +227,20 @@ window.QUESTION_BATCHES = {
     makeQ("Which nation won the 1987 Copa America?", ["Chile", "Uruguay", "Argentina", "Brazil"], 1),
     makeQ("Which nation won the 1995 Copa America?", ["Brazil", "Uruguay", "Argentina", "Colombia"], 1),
     makeQ("Which team did Arsenal defeat in the Women's Champions League final of 2025?", ["Barcelona", "Lyon", "Chelsea", "Wolfsburg"], 0),
-    makeQ("Which nation won Euro 2022 in women's football?", ["England", "Germany", "Spain", "Sweden"], 0)
+    makeQ("Which nation won Euro 2022 in women's football?", ["England", "Germany", "Spain", "Sweden"], 0),
+    makeQ("Who scored the fastest hat-trick in World Cup history?", ["Laszlo Kiss", "Sandor Kocsis", "Just Fontaine", "Oleg Salenko"], 0),
+    makeQ("Which player holds the record for most international caps in men's football?", ["Cristiano Ronaldo", "Sergio Ramos", "Ahmed Hassan", "Bader Al-Mutawa"], 3),
+    makeQ("What was the final score of the 'Match of the Century' in 1970 World Cup semifinal?", ["4-3 to Italy", "3-2 to West Germany", "4-2 to Brazil", "3-1 to Italy"], 0),
+    makeQ("Which nation eliminated defending champions France in the 2022 World Cup group stage?", ["Australia", "Denmark", "Tunisia", "None - France advanced"], 3),
+    makeQ("Who scored the winning penalty in the 2006 World Cup final shootout?", ["Fabio Grosso", "Andrea Pirlo", "Daniele De Rossi", "Alessandro Del Piero"], 0),
+    makeQ("Which goalkeeper holds the record for longest unbeaten streak in World Cup history?", ["Gianluigi Buffon", "Walter Zenga", "Thibaut Courtois", "Iker Casillas"], 1),
+    makeQ("Who was the youngest player to score in a World Cup final?", ["Pele", "Kylian Mbappe", "Michael Owen", "Diego Maradona"], 0),
+    makeQ("Which club won the 2004 UEFA Champions League as massive underdogs?", ["Porto", "Monaco", "AC Milan", "Chelsea"], 0),
+    makeQ("Who managed Porto to the 2004 Champions League title?", ["Jose Mourinho", "Carlo Ancelotti", "Rafa Benitez", "Guus Hiddink"], 0),
+    makeQ("Which nation scored the most goals in a single World Cup tournament?", ["Hungary 1954", "Brazil 1970", "West Germany 1954", "France 1998"], 0),
+    makeQ("Who scored the famous bicycle kick goal against Mexico in the 2018 World Cup?", ["Cristiano Ronaldo", "Javier Hernandez", "Edson Alvarez", "None - no bicycle kick goal"], 0),
+    makeQ("Which player won the Puskas Award for best goal in 2024?", ["Vinicius Junior", "Lionel Messi", "Cristiano Ronaldo", "Kylian Mbappe"], 0),
+    makeQ("What is the 'Tiki-taka' style of play most associated with?", ["Spain and Barcelona", "Germany and Bayern", "Brazil and Santos", "Italy and Juventus"], 0),
+    makeQ("Which nation won the first FIFA U-20 World Cup in 1977?", ["Brazil", "Soviet Union", "Argentina", "Uruguay"], 1),
   ]
 };
