@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>World Cup 2026 - Amalga</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 :root{
   --green:#1a7a3c;--gl:#25a852;--gd:#0f4f26;
@@ -722,12 +723,17 @@ const BRACKET=[
 let S={room:'',role:'',team:'',playerName:'',playerNum:'',activeMatch:null,qIdx:0,qActive:false,firstBuzz:null,answers:{},bracket:JSON.parse(JSON.stringify(BRACKET)),usedQs:{easy:[],medium:[],hard:[]},curQ:null,qCycle:0};
 let tmrInt=null,tmrSec=20,lastBuzzTs=0,lastEvTs=0,toastTmr=null;
 
+// ── SUPABASE REALTIME ──
+const SUPA=window.supabase.createClient(
+  'https://fbjwpxapkqsoouyrdzel.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZiandweGFwa3Fzb291eXJkemVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTk5NzIsImV4cCI6MjA5MTMzNTk3Mn0.eauBSeEWci7GkAUGNasrRcgK0x35Y-PabtOkDF9b_xM'
+);
+let _ch=null;
+
 const gk=k=>`mq_${S.room}_${k}`;
 const pub=(ev,d)=>{
-  if(!S.room)return;
-  const p={event:ev,data:d,ts:Date.now()};
-  localStorage.setItem(gk('ev'),JSON.stringify(p));
-  if(window._bc)window._bc.postMessage(p);
+  if(!S.room||!_ch)return;
+  _ch.send({type:'broadcast',event:ev,payload:d});
 };
 
 // ── ROUTING ──
@@ -764,44 +770,29 @@ function goPlayer(){
 }
 
 function goBack(){
-  if(window._bc){try{window._bc.close();}catch{}}
-  window._bc=null;
-  // Limpiar datos de sesión del localStorage
-  if(S.room){
-    try{localStorage.removeItem(gk('ev'));localStorage.removeItem(gk('buzz'));}catch{}
-  }
+  if(_ch){try{_ch.unsubscribe();}catch{}}
+  _ch=null;
   S.role=null;S.room=null;S.team=null;S.activeMatch=null;S.qActive=false;S.curQ=null;S.firstBuzz=null;S.answers={};
   lastEvTs=0;lastBuzzTs=0;
   ss('ls');
 }
 
 function setupBC(){
-  if(typeof BroadcastChannel!=='undefined'){
-    window._bc=new BroadcastChannel(`mq_${S.room}`);
-    window._bc.onmessage=e=>handleEv(e.data);
-  }
+  if(_ch){try{_ch.unsubscribe();}catch{}}
+  _ch=SUPA.channel(`mq_${S.room}`,{config:{broadcast:{self:false}}});
+  _ch.on('broadcast',{event:'question_start'},({payload})=>{if(S.role==='player')pQStart(payload);})
+     .on('broadcast',{event:'question_end'},({payload})=>{if(S.role==='player')pQEnd(payload);})
+     .on('broadcast',{event:'goal'},({payload})=>{
+       if(S.role==='player'&&payload.team===S.team){S.myGoals=(S.myGoals||0)+1;updPGoals();}
+       showGoal(payload.team,payload.answer);
+     })
+     .on('broadcast',{event:'match_winner'},({payload})=>{if(S.role!=='host')showWin(payload.team);})
+     .on('broadcast',{event:'buzz'},({payload})=>{if(S.role==='host'){const b=payload;if(b.ts>lastBuzzTs)onBuzz(b);}})
+     .subscribe(status=>{console.log('Supabase channel:',status);});
 }
 
 function startPoll(){
-  setInterval(()=>{
-    try{const raw=localStorage.getItem(gk('ev'));
-      if(raw){const e=JSON.parse(raw);if(e.ts>lastEvTs){lastEvTs=e.ts;handleEv(e);}}}catch{}
-    updPGoals();
-  },250);
-}
-
-window.addEventListener('storage',e=>{
-  if(!S.room)return;
-  if(e.key===gk('ev')){try{const ev=JSON.parse(e.newValue);if(ev&&ev.ts>lastEvTs){lastEvTs=ev.ts;handleEv(ev);}}catch{}}
-  if(e.key===gk('buzz')&&S.role==='host'){try{const b=JSON.parse(e.newValue);if(b&&b.ts>lastBuzzTs){onBuzz(b);}}catch{}}
-});
-
-function handleEv(ev){
-  if(!ev)return;
-  if(ev.event==='question_start'&&S.role==='player')pQStart(ev.data);
-  else if(ev.event==='question_end'&&S.role==='player')pQEnd(ev.data);
-  else if(ev.event==='goal'){showGoal(ev.data.team,ev.data.answer);}
-  else if(ev.event==='match_winner'&&S.role!=='host')showWin(ev.data.team);
+  setInterval(()=>{updPGoals();},1000);
 }
 
 // ══════════════════════════════════════════
@@ -817,16 +808,7 @@ function resetAll(){
   S.bracket=JSON.parse(JSON.stringify(BRACKET));
   S.activeMatch=null;S.qIdx=0;S.qActive=false;S.firstBuzz=null;S.answers={};S.curQ=null;S.usedQs={easy:[],medium:[],hard:[]};S.qCycle=0;
   // Limpiar localStorage del room
-  try{
-    localStorage.removeItem(`mq_${S.room}_bracket`);
-    BRACKET.forEach(m=>{
-      m.teams.forEach(t=>{if(t)localStorage.removeItem(gk(`goals_${t}`));});
-    });
-    // También limpiar equipos de semis/final que pueden haber avanzado
-    ['Mexico','Brazil','Spain','Argentina','France','Germany','Portugal','United States'].forEach(t=>{
-      localStorage.removeItem(gk(`goals_${t}`));
-    });
-  }catch{}
+  try{localStorage.removeItem(`mq_${S.room}_bracket`);}catch{}
   clearInterval(tmrInt);tmrInt=null;S.qActive=false;
   document.getElementById('ga').style.display='none';
   renderBkt();renderMBtns();
@@ -970,13 +952,6 @@ function startTmr(){
   },1000);
 }
 
-// Poll buzz
-setInterval(()=>{
-  if(!S.room||S.role!=='host'||!S.qActive)return;
-  try{const raw=localStorage.getItem(gk('buzz'));
-    if(raw){const b=JSON.parse(raw);if(b.ts>lastBuzzTs){onBuzz(b);}}}catch{}
-},120);
-
 function onBuzz(buzz){
   if(!S.qActive)return;
   if(buzz.ts<=lastBuzzTs)return;
@@ -1026,8 +1001,6 @@ function hCorrect(){
   document.getElementById(i===0?'scA':'scB').classList.add('scored');
   renderBkt();
   saveBracket();
-  const gk2=gk(`goals_${S.firstBuzz}`);
-  localStorage.setItem(gk2,(parseInt(localStorage.getItem(gk2)||0)+1));
   // Highlight correct option
   const LABS=['A','B','C','D'];
   document.getElementById(`opt-host-${S.curQ.c}`)?.classList.add('correct-opt');
@@ -1152,7 +1125,7 @@ function pAnswer(idx){
   document.getElementById(`popt-${idx}`)?.classList.add('selected');
   sfxSelect();
   const buzz={team:S.team,answerIdx:idx,ts:Date.now(),name:S.playerName,num:S.playerNum};
-  localStorage.setItem(gk('buzz'),JSON.stringify(buzz));
+  pub('buzz',buzz);
   // Show "waiting for result" state
   document.getElementById(`popt-${idx}`).innerHTML=`<span class="olbl" style="color:var(--gold)">${['A','B','C','D'][idx]}</span><span>${document.getElementById(`popt-${idx}`).querySelector('span:last-child').textContent} ⏳</span>`;
 }
@@ -1203,8 +1176,7 @@ function showPanel(id){
 
 function updPGoals(){
   if(!S.room||!S.team)return;
-  const g=parseInt(localStorage.getItem(gk(`goals_${S.team}`))||0);
-  document.getElementById('pg').textContent=g;
+  document.getElementById('pg').textContent=S.myGoals||0;
 }
 
 // ══════════════════════════════════════════
