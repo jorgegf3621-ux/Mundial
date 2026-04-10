@@ -924,7 +924,7 @@ function hStartQ(){
   const m=S.bracket.find(x=>x.id===S.activeMatch);
   const q=getQ();S.curQ=q;S.firstBuzz=null;S.answers={};S.qActive=true;
 
-  document.getElementById('qlb').textContent=`QUESTION ${S.qIdx+1} - ${q.difficulty.toUpperCase()}`;
+  document.getElementById('qlb').textContent=`QUESTION ${S.qCycle} - ${q.difficulty.toUpperCase()}`;
   document.getElementById('qtxt').textContent=q.q;
   document.getElementById('ansrtxt').textContent=q.opts[q.c];
 
@@ -1061,7 +1061,7 @@ const GOALS_TO_WIN = 3;
 function hNext(){
   S.qIdx++;
   document.getElementById('qc').textContent=S.qIdx+1;
-  document.getElementById('qlb').textContent=`QUESTION ${S.qIdx+1}`;
+  document.getElementById('qlb').textContent=`QUESTION ${S.qIdx+1}`; // updated after getQ in hStartQ
   resetBtns();S.firstBuzz=null;S.answers={};S.qActive=false;
   resetBuzzBar();
   document.getElementById('opts-host').innerHTML='';
